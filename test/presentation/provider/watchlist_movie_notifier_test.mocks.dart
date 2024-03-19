@@ -6,7 +6,7 @@ import 'dart:async' as _i4;
 
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:ditonton/common/failure.dart' as _i5;
-import 'package:ditonton/domain/entities/movie.dart' as _i6;
+import 'package:ditonton/domain/entities/movies/movie.dart' as _i6;
 import 'package:ditonton/domain/usecases/get_watchlist_movies.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -28,9 +28,10 @@ class MockGetWatchlistMovies extends _i1.Mock
   }
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, List<_i6.Movie>>> execute() =>
-      (super.noSuchMethod(Invocation.method(#execute, []),
-          returnValue: Future<_i2.Either<_i5.Failure, List<_i6.Movie>>>.value(
-              _FakeEither<_i5.Failure, List<_i6.Movie>>())) as _i4
-          .Future<_i2.Either<_i5.Failure, List<_i6.Movie>>>);
+  _i4.Future<_i2.Either<_i5.Failure, List<_i6.Movie>>> execute() => (super
+          .noSuchMethod(Invocation.method(#execute, []),
+              returnValue:
+                  Future<_i2.Either<_i5.Failure, List<_i6.Movie>>>.value(
+                      _FakeEither<_i5.Failure, List<_i6.Movie>>()))
+      as _i4.Future<_i2.Either<_i5.Failure, List<_i6.Movie>>>);
 }
