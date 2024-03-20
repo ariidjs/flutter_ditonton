@@ -95,6 +95,19 @@ void main() {
       verify(mockRemoteDataSource.getNowPlayingTv());
       expect(result, equals(Left(ServerFailure(''))));
     });
+
+    test(
+        'should return connection failure when device is not connected to the internet',
+        () async {
+      // arrange
+      when(mockRemoteDataSource.getNowPlayingTv())
+          .thenThrow(SocketException('Failed to connect to the network'));
+      // act
+      final result = await repository.getOnTheAirTvShows();
+      // assert
+      expect(
+          result, Left(ConnectionFailure('Failed to connect to the network')));
+    });
   });
 
   group('Popular TV Shows', () {

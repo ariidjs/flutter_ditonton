@@ -36,17 +36,6 @@ class SeasonDetailResponse extends Equatable {
         seasonNumber: json["season_number"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "_id": id,
-        "air_date": airDate,
-        "episodes": List<dynamic>.from(episodes.map((x) => x.toJson())),
-        "name": name,
-        "overview": overview,
-        "id": seasonDetailResponseId,
-        "poster_path": posterPath,
-        "season_number": seasonNumber,
-      };
-
   SeasonDetail toEntity() {
     return SeasonDetail(
       id: this.id,
@@ -122,23 +111,6 @@ class EpisodeModel extends Equatable {
         crew: List<dynamic>.from(json["crew"].map((x) => x)),
         guestStars: List<dynamic>.from(json["guest_stars"].map((x) => x)),
       );
-
-  Map<String, dynamic> toJson() => {
-        "air_date": airDate,
-        "episode_number": episodeNumber,
-        "id": id,
-        "name": name,
-        "overview": overview,
-        "production_code": productionCode,
-        "runtime": runtime,
-        "season_number": seasonNumber,
-        "show_id": showId,
-        "still_path": stillPath,
-        "vote_average": voteAverage,
-        "vote_count": voteCount,
-        "crew": List<dynamic>.from(crew.map((x) => x)),
-        "guest_stars": List<dynamic>.from(guestStars.map((x) => x)),
-      };
 
   Episode toEntity() {
     return Episode(
