@@ -1,4 +1,5 @@
 import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/presentation/provider/tv/on_the_air_tv_notifier.dart';
 import 'package:ditonton/presentation/provider/tv/tv_list_notifier.dart';
 import 'package:ditonton/presentation/widgets/tv_card_list.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,9 @@ class _OnTheAirTVPageState extends State<OnTheAirTvPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => Provider.of<TvListNotifier>(context, listen: false)
-        .fetchOnTheAirTvShows());
+    Future.microtask(() =>
+        Provider.of<OnTheAirTvNotifier>(context, listen: false)
+            .fetchOnTheAirTv());
   }
 
   @override

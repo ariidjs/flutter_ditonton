@@ -22,13 +22,6 @@ class TvTable extends Equatable {
         overview: map['overview'],
       );
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'posterPath': posterPath,
-        'overview': overview,
-      };
-
   factory TvTable.fromEntity(TvDetail tv) => TvTable(
       id: tv.id,
       name: tv.name,

@@ -1,0 +1,31 @@
+{
+    "page": 1,
+    "results": [
+        {
+            "adult": false,
+            "backdrop_path": "/rBF8wVQN8hTWHspVZBlI3h7HZJ.jpg",
+            "id": 60625,
+            "name": "Rick and Morty",
+            "original_language": "en",
+            "original_name": "Rick and Morty",
+            "overview": "Rick is a mentally-unbalanced but scientifically gifted old man who has recently reconnected with his family. He spends most of his time involving his young grandson Morty in dangerous, outlandish adventures throughout space and alternate universes. Compounded with Morty's already unstable family life, these events cause Morty much distress at home and school.",
+            "poster_path": "/gdIrmf2DdY5mgN6ycVP0XlzKzbE.jpg",
+            "media_type": "tv",
+            "genre_ids": [
+                16,
+                35,
+                10765,
+                10759
+            ],
+            "popularity": 1008.643,
+            "first_air_date": "2013-12-02",
+            "vote_average": 8.702,
+            "vote_count": 9240,
+            "origin_country": [
+                "US"
+            ]
+        }
+    ],
+    "total_pages": 2,
+    "total_results": 40
+}

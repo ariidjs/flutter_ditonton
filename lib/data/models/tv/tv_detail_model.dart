@@ -121,46 +121,6 @@ class TvDetailResponse extends Equatable {
         voteCount: json["vote_count"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "adult": adult,
-        "backdrop_path": backdropPath,
-        "created_by": List<dynamic>.from(createdBy.map((x) => x)),
-        "episode_run_time": List<dynamic>.from(episodeRunTime.map((x) => x)),
-        "first_air_date":
-            "${firstAirDate!.year.toString().padLeft(4, '0')}-${firstAirDate!.month.toString().padLeft(2, '0')}-${firstAirDate!.day.toString().padLeft(2, '0')}",
-        "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
-        "homepage": homepage,
-        "id": id,
-        "in_production": inProduction,
-        "languages": List<dynamic>.from(languages.map((x) => x)),
-        "last_air_date":
-            "${lastAirDate!.year.toString().padLeft(4, '0')}-${lastAirDate!.month.toString().padLeft(2, '0')}-${lastAirDate!.day.toString().padLeft(2, '0')}",
-        "last_episode_to_air": lastEpisodeToAir.toJson(),
-        "name": name,
-        "next_episode_to_air": nextEpisodeToAir.toJson(),
-        "networks": List<dynamic>.from(networks.map((x) => x.toJson())),
-        "number_of_episodes": numberOfEpisodes,
-        "number_of_seasons": numberOfSeasons,
-        "origin_country": List<dynamic>.from(originCountry.map((x) => x)),
-        "original_language": originalLanguage,
-        "original_name": originalName,
-        "overview": overview,
-        "popularity": popularity,
-        "poster_path": posterPath,
-        "production_companies":
-            List<dynamic>.from(productionCompanies.map((x) => x.toJson())),
-        "production_countries":
-            List<dynamic>.from(productionCountries.map((x) => x)),
-        "seasons": List<dynamic>.from(seasons.map((x) => x.toJson())),
-        "spoken_languages":
-            List<dynamic>.from(spokenLanguages.map((x) => x.toJson())),
-        "status": status,
-        "tagline": tagline,
-        "type": type,
-        "vote_average": voteAverage,
-        "vote_count": voteCount,
-      };
-
   TvDetail toEntity() {
     return TvDetail(
       backdropPath: this.backdropPath,

@@ -18,12 +18,6 @@ class SpokenLanguageModel extends Equatable {
         name: json["name"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "english_name": englishName,
-        "iso_639_1": iso6391,
-        "name": name,
-      };
-
   @override
   List<Object?> get props => [
         englishName,

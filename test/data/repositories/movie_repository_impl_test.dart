@@ -11,8 +11,8 @@ import 'package:ditonton/domain/entities/movies/movie.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../dummy_data/dummy_objects.dart';
-import '../../helpers/test_helper.mocks.dart';
+import '../../dummy_data/movies/dummy_objects.dart';
+import '../../helpers/movie_test_helper.mocks.dart';
 
 void main() {
   late MovieRepositoryImpl repository;

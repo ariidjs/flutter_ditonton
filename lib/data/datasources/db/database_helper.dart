@@ -22,6 +22,7 @@ class DatabaseHelper {
   }
 
   static const String _tblWatchlist = 'watchlist';
+  static const String _tblWatchlistTv = 'watchlistTv';
 
   Future<Database> _initDb() async {
     final path = await getDatabasesPath();
@@ -40,16 +41,40 @@ class DatabaseHelper {
         posterPath TEXT
       );
     ''');
+    await db.execute('''
+      CREATE TABLE $_tblWatchlistTv (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        overview TEXT,
+        posterPath TEXT
+      );
+      ''');
   }
 
   Future<int> insertWatchlist(MovieTable movie) async {
     final db = await database;
-    return await db!.insert(_tblWatchlist, movie.toJson());
+    return await db!.insert(
+      _tblWatchlist,
+      {
+        'id': movie.id,
+        'title': movie.title,
+        'posterPath': movie.posterPath,
+        'overview': movie.overview,
+      },
+    );
   }
 
   Future<int> insertTvWatchlist(TvTable tv) async {
     final db = await database;
-    return await db!.insert(_tblWatchlist, tv.toJson());
+    return await db!.insert(
+      _tblWatchlistTv,
+      {
+        'id': tv.id,
+        'name': tv.name,
+        'posterPath': tv.posterPath,
+        'overview': tv.overview,
+      },
+    );
   }
 
   Future<int> removeWatchlist(MovieTable movie) async {
@@ -64,7 +89,7 @@ class DatabaseHelper {
   Future<int> removeTvWatchlist(TvTable tv) async {
     final db = await database;
     return await db!.delete(
-      _tblWatchlist,
+      _tblWatchlistTv,
       where: 'id = ?',
       whereArgs: [tv.id],
     );
@@ -88,7 +113,7 @@ class DatabaseHelper {
   Future<Map<String, dynamic>?> getTvById(int id) async {
     final db = await database;
     final results = await db!.query(
-      _tblWatchlist,
+      _tblWatchlistTv,
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -109,7 +134,7 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getWatchlistTv() async {
     final db = await database;
-    final List<Map<String, dynamic>> results = await db!.query(_tblWatchlist);
+    final List<Map<String, dynamic>> results = await db!.query(_tblWatchlistTv);
 
     return results;
   }
