@@ -89,7 +89,10 @@ class MyApp extends StatelessWidget {
           colorScheme: kColorScheme,
           primaryColor: kRichBlack,
           scaffoldBackgroundColor: kRichBlack,
-          textTheme: kTextTheme,
+          textTheme: TextTheme(
+            headlineSmall: kHeading5,
+            titleLarge: kHeading6,
+          ),
         ),
         home: HomeMoviePage(),
         navigatorObservers: [routeObserver],
@@ -135,7 +138,7 @@ class MyApp extends StatelessWidget {
               final args = settings.arguments as Map;
               return MaterialPageRoute(
                 builder: (_) => TvSeasonDetailPage(
-                  tvId: args['tvId'],
+                  tv: args['tvId'],
                   seasonNumber: args['seasonNumber'],
                 ),
                 settings: settings,

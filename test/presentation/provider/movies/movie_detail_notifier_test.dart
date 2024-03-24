@@ -117,6 +117,19 @@ void main() {
       expect(provider.movieState, RequestState.Loaded);
       expect(provider.movieRecommendations, tMovies);
     });
+    test('should return error when data is unsuccessful', () async {
+      // arrange
+      when(mockGetMovieDetail.execute(tId))
+          .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+      when(mockGetMovieRecommendations.execute(tId))
+          .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+      // act
+      await provider.fetchMovieDetail(tId);
+      // assert
+      expect(provider.movieState, RequestState.Error);
+      expect(provider.message, 'Server Failure');
+      expect(listenerCallCount, 2);
+    });
   });
 
   group('Get Movie Recommendations', () {
@@ -187,6 +200,20 @@ void main() {
       await provider.removeFromWatchlist(testMovieDetail);
       // assert
       verify(mockRemoveWatchlist.execute(testMovieDetail));
+    });
+
+    test('should update watchlist message when remove watchlist failed',
+        () async {
+      // arrange
+      when(mockRemoveWatchlist.execute(testMovieDetail))
+          .thenAnswer((_) async => Left(DatabaseFailure('Failed')));
+      when(mockGetWatchlistStatus.execute(testMovieDetail.id))
+          .thenAnswer((_) async => false);
+      // act
+      await provider.removeFromWatchlist(testMovieDetail);
+      // assert
+      expect(provider.watchlistMessage, 'Failed');
+      expect(listenerCallCount, 1);
     });
 
     test('should update watchlist status when add watchlist success', () async {

@@ -108,14 +108,8 @@ class TvRepositoryImpl implements TvRepository {
 
   @override
   Future<Either<Failure, List<TvShow>>> getWatchlistTvShows() async {
-    try {
-      final result = await localDataSource.getWatchlistTv();
-      return Right(result.map((model) => model.toEntity()).toList());
-    } on DatabaseException catch (e) {
-      return Left(DatabaseFailure(e.message));
-    } catch (e) {
-      throw e;
-    }
+    final result = await localDataSource.getWatchlistTv();
+    return Right(result.map((model) => model.toEntity()).toList());
   }
 
   @override

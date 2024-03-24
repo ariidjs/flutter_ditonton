@@ -28,6 +28,84 @@ void main() {
     );
   }
 
+  group('detail test', () {
+    testWidgets('content of Movie Details and recommendation should display',
+        (WidgetTester tester) async {
+      when(mockNotifier.movieState).thenReturn(RequestState.Loaded);
+      when(mockNotifier.movie).thenReturn(testMovieDetail);
+      when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
+      when(mockNotifier.movieRecommendations).thenReturn(<Movie>[testMovie]);
+      when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+      await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
+
+      expect(find.byKey(Key('recommendation-test')), findsOneWidget);
+    });
+
+    testWidgets('should display text with message when Error getting detail',
+        (WidgetTester tester) async {
+      when(mockNotifier.movieState).thenReturn(RequestState.Error);
+
+      when(mockNotifier.message).thenReturn('Error message');
+      when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+      final textFinder = find.byKey(Key('error_message'));
+
+      await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
+
+      expect(textFinder, findsOneWidget);
+    });
+
+    testWidgets('should display center progress bar when loading detail',
+        (WidgetTester tester) async {
+      when(mockNotifier.movieState).thenReturn(RequestState.Loading);
+      when(mockNotifier.movie).thenReturn(testMovieDetail);
+
+      final progressBarFinder = find.byType(CircularProgressIndicator);
+      final centerFinder = find.byType(Center);
+
+      await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
+
+      expect(centerFinder, findsOneWidget);
+      expect(progressBarFinder, findsOneWidget);
+    });
+
+    testWidgets(
+        'should display text with message when Error getting recommendations',
+        (WidgetTester tester) async {
+      when(mockNotifier.movieState).thenReturn(RequestState.Loaded);
+      when(mockNotifier.movie).thenReturn(testMovieDetail);
+      when(mockNotifier.movieRecommendations).thenReturn(<Movie>[]);
+      when(mockNotifier.recommendationState).thenReturn(RequestState.Error);
+      when(mockNotifier.message).thenReturn('Error message');
+      when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+      final textFinder = find.byKey(Key('error_message'));
+
+      await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
+
+      expect(textFinder, findsWidgets);
+    });
+
+    testWidgets(
+        'should display center progress bar when loading recommendations',
+        (WidgetTester tester) async {
+      when(mockNotifier.movieState).thenReturn(RequestState.Loaded);
+      when(mockNotifier.movie).thenReturn(testMovieDetail);
+      when(mockNotifier.movieRecommendations).thenReturn(<Movie>[]);
+      when(mockNotifier.recommendationState).thenReturn(RequestState.Loading);
+      when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+      final progressBarFinder = find.byType(CircularProgressIndicator);
+      final centerFinder = find.byType(Center);
+
+      await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
+
+      expect(centerFinder, findsWidgets);
+      expect(progressBarFinder, findsWidgets);
+    });
+  });
+
   testWidgets(
       'Watchlist button should display add icon when movie not added to watchlist',
       (WidgetTester tester) async {

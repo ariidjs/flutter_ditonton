@@ -115,6 +115,19 @@ void main() {
       expect(provider.tvState, RequestState.Loaded);
       expect(provider.tvRecommendations, tTvs);
     });
+    test('should return error when data is unsuccessful', () async {
+      // arrange
+      when(mockGetTvDetail.execute(tId))
+          .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+      when(mockGetTvRecommendation.execute(tId))
+          .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+      // act
+      await provider.fetchTvShowDetail(tId);
+      // assert
+      expect(provider.tvState, RequestState.Error);
+      expect(provider.message, 'Server Failure');
+      expect(listenerCallCount, 2);
+    });
   });
 
   group('get tv recommendation', () {
@@ -183,6 +196,20 @@ void main() {
       await provider.removeFromWatchlist(testTvDetail);
       // assert
       verify(mockRemoveWatchlist.execute(testTvDetail));
+    });
+
+    test('should update watchlist message when remove watchlist failed',
+        () async {
+      // arrange
+      when(mockRemoveWatchlist.execute(testTvDetail))
+          .thenAnswer((_) async => Left(DatabaseFailure('Failed')));
+      when(mockGetWatchlistStatus.execute(testTvDetail.id))
+          .thenAnswer((_) async => false);
+      // act
+      await provider.removeFromWatchlist(testTvDetail);
+      // assert
+      expect(provider.watchlistMessage, 'Failed');
+      expect(listenerCallCount, 1);
     });
 
     test('should update watchlist status when add watchlist success', () async {

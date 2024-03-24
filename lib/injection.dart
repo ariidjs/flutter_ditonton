@@ -123,7 +123,6 @@ void init() {
   );
   locator.registerFactory(
     () => TvSeasonDetailNotifier(
-      getTvShowDetail: locator(),
       getTvSeasonDetail: locator(),
       getTvShowRecommendations: locator(),
       getWatchlistTvStatus: locator(),
@@ -189,7 +188,7 @@ void init() {
   );
 
   // helper
-  locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
+  // locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
 
   // external
   locator.registerLazySingleton(() => http.Client());

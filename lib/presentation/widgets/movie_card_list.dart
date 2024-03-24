@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/movies/movie.dart';
 import 'package:ditonton/presentation/pages/movies/movie_detail_page.dart';
+import 'package:ditonton/presentation/pages/tv/tv_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class MovieCard extends StatelessWidget {
@@ -14,11 +15,13 @@ class MovieCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: InkWell(
+        key: Key('test-tap'),
         onTap: () {
-          Navigator.pushNamed(
+          Navigator.push(
             context,
-            MovieDetailPage.ROUTE_NAME,
-            arguments: movie.id,
+            MaterialPageRoute(
+              builder: (_) => TvDetailPage(id: movie.id),
+            ),
           );
         },
         child: Stack(
@@ -56,14 +59,14 @@ class MovieCard extends StatelessWidget {
                 bottom: 16,
               ),
               child: ClipRRect(
-                child: CachedNetworkImage(
-                  imageUrl: '$BASE_IMAGE_URL${movie.posterPath}',
-                  width: 80,
-                  placeholder: (context, url) => Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
+                // child: CachedNetworkImage(
+                //   imageUrl: '$BASE_IMAGE_URL${movie.posterPath}',
+                //   width: 80,
+                //   placeholder: (context, url) => Center(
+                //     child: CircularProgressIndicator(),
+                //   ),
+                //   errorWidget: (context, url, error) => Icon(Icons.error),
+                // ),
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
             ),

@@ -1,6 +1,6 @@
 import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/domain/entities/tv/season_detail.dart';
 import 'package:ditonton/domain/entities/tv/tv_show.dart';
-import 'package:ditonton/presentation/pages/tv/tv_detail_page.dart';
 import 'package:ditonton/presentation/pages/tv/tv_season_detail_page.dart';
 import 'package:ditonton/presentation/provider/tv/tv_season_detail_notifier.dart';
 import 'package:flutter/material.dart';
@@ -21,37 +21,130 @@ void main() {
   });
 
   Widget _makeTestableWidget(Widget body) {
-    return ChangeNotifierProvider<MockTvSeasonDetailNotifier>.value(
+    return ChangeNotifierProvider<TvSeasonDetailNotifier>.value(
       value: mockNotifier,
       child: MaterialApp(home: body),
     );
   }
 
+  group('detail test', () {
+    testWidgets('content of Season Details and recommendation should display',
+        (WidgetTester tester) async {
+      when(mockNotifier.seasonState).thenReturn(RequestState.Loaded);
+      when(mockNotifier.seasonDetail).thenReturn(testTvSeasonDetail);
+      when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
+      when(mockNotifier.tvRecommendations).thenReturn(<TvShow>[testTv]);
+      when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+      await tester.pumpWidget(_makeTestableWidget(TvSeasonDetailPage(
+        tv: testTvDetail,
+        seasonNumber: 1,
+      )));
+
+      expect(find.byKey(Key('season-tv-test')), findsOneWidget);
+      expect(find.byKey(Key('recommendation-tv-test')), findsOneWidget);
+    });
+
+    testWidgets('should display text with message when Error getting detail',
+        (WidgetTester tester) async {
+      when(mockNotifier.seasonState).thenReturn(RequestState.Error);
+      when(mockNotifier.seasonDetail).thenReturn(testTvSeasonDetail);
+      when(mockNotifier.message).thenReturn('Error message');
+      when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+      final textFinder = find.byKey(Key('error_message'));
+
+      await tester.pumpWidget(_makeTestableWidget(TvSeasonDetailPage(
+        tv: testTvDetail,
+        seasonNumber: 1,
+      )));
+
+      expect(textFinder, findsOneWidget);
+    });
+
+    testWidgets('should display center progress bar when loading detail',
+        (WidgetTester tester) async {
+      when(mockNotifier.seasonState).thenReturn(RequestState.Loading);
+      when(mockNotifier.seasonDetail).thenReturn(testTvSeasonDetail);
+
+      final progressBarFinder = find.byType(CircularProgressIndicator);
+      final centerFinder = find.byType(Center);
+
+      await tester.pumpWidget(_makeTestableWidget(TvSeasonDetailPage(
+        tv: testTvDetail,
+        seasonNumber: 1,
+      )));
+
+      expect(centerFinder, findsOneWidget);
+      expect(progressBarFinder, findsOneWidget);
+    });
+
+    testWidgets(
+        'should display text with message when Error getting recommendations',
+        (WidgetTester tester) async {
+      when(mockNotifier.seasonState).thenReturn(RequestState.Loaded);
+      when(mockNotifier.seasonDetail).thenReturn(testTvSeasonDetail);
+      when(mockNotifier.recommendationState).thenReturn(RequestState.Error);
+      when(mockNotifier.tvRecommendations).thenReturn(<TvShow>[testTv]);
+      when(mockNotifier.message).thenReturn('Error message');
+      when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+      final textFinder = find.byKey(Key('error_message'));
+
+      await tester.pumpWidget(_makeTestableWidget(TvSeasonDetailPage(
+        tv: testTvDetail,
+        seasonNumber: 1,
+      )));
+
+      expect(textFinder, findsOneWidget);
+    });
+
+    testWidgets(
+        'should display center progress bar when loading recommendations',
+        (WidgetTester tester) async {
+      when(mockNotifier.seasonState).thenReturn(RequestState.Loaded);
+      when(mockNotifier.seasonDetail).thenReturn(testTvSeasonDetail);
+      when(mockNotifier.recommendationState).thenReturn(RequestState.Loading);
+      when(mockNotifier.tvRecommendations).thenReturn(<TvShow>[]);
+      when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+      final progressBarFinder = find.byType(CircularProgressIndicator);
+      final centerFinder = find.byType(Center);
+
+      await tester.pumpWidget(_makeTestableWidget(TvSeasonDetailPage(
+        tv: testTvDetail,
+        seasonNumber: 1,
+      )));
+
+      expect(centerFinder, findsWidgets);
+      expect(progressBarFinder, findsWidgets);
+    });
+  });
+
   testWidgets(
       'Watchlist button should display add icon when tv not added to watchlist',
       (WidgetTester tester) async {
-    when(mockNotifier.tvDetailState).thenReturn(RequestState.Loaded);
-    when(mockNotifier.tvDetail).thenReturn(testTvDetail);
+    when(mockNotifier.seasonState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.seasonDetail).thenReturn(testTvSeasonDetail);
     when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
     when(mockNotifier.tvRecommendations).thenReturn(<TvShow>[]);
     when(mockNotifier.isAddedToWatchlist).thenReturn(false);
 
-    await tester.pumpWidget(_makeTestableWidget(TvSeasonDetailPage(
-      tvId: 1,
-      seasonNumber: 1,
-    )));
     final watchlistButtonIcon = find.byIcon(Icons.add);
 
-    expect(watchlistButtonIcon, Icons.add);
+    await tester.pumpWidget(_makeTestableWidget(TvSeasonDetailPage(
+      tv: testTvDetail,
+      seasonNumber: 1,
+    )));
 
-    // expect(watchlistButtonIcon, findsOneWidget);
+    expect(watchlistButtonIcon, findsOneWidget);
   });
 
   testWidgets(
       'Watchlist button should dispay check icon when tv is added to wathclist',
       (WidgetTester tester) async {
-    when(mockNotifier.tvDetailState).thenReturn(RequestState.Loaded);
-    when(mockNotifier.tvDetail).thenReturn(testTvDetail);
+    when(mockNotifier.seasonState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.seasonDetail).thenReturn(testTvSeasonDetail);
     when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
     when(mockNotifier.tvRecommendations).thenReturn(<TvShow>[]);
     when(mockNotifier.isAddedToWatchlist).thenReturn(true);
@@ -59,7 +152,7 @@ void main() {
     final watchlistButtonIcon = find.byIcon(Icons.check);
 
     await tester.pumpWidget(_makeTestableWidget(TvSeasonDetailPage(
-      tvId: 1,
+      tv: testTvDetail,
       seasonNumber: 1,
     )));
 
@@ -69,8 +162,8 @@ void main() {
   testWidgets(
       'Watchlist button should display Snackbar when added to watchlist',
       (WidgetTester tester) async {
-    when(mockNotifier.tvDetailState).thenReturn(RequestState.Loaded);
-    when(mockNotifier.tvDetail).thenReturn(testTvDetail);
+    when(mockNotifier.seasonState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.seasonDetail).thenReturn(testTvSeasonDetail);
     when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
     when(mockNotifier.tvRecommendations).thenReturn(<TvShow>[]);
     when(mockNotifier.isAddedToWatchlist).thenReturn(false);
@@ -79,7 +172,7 @@ void main() {
     final watchlistButton = find.byType(ElevatedButton);
 
     await tester.pumpWidget(_makeTestableWidget(TvSeasonDetailPage(
-      tvId: 1,
+      tv: testTvDetail,
       seasonNumber: 1,
     )));
 
@@ -95,8 +188,8 @@ void main() {
   testWidgets(
       'Watchlist button should display AlertDialog when add to watchlist failed',
       (WidgetTester tester) async {
-    when(mockNotifier.tvDetailState).thenReturn(RequestState.Loaded);
-    when(mockNotifier.tvDetail).thenReturn(testTvDetail);
+    when(mockNotifier.seasonState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.seasonDetail).thenReturn(testTvSeasonDetail);
     when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
     when(mockNotifier.tvRecommendations).thenReturn(<TvShow>[]);
     when(mockNotifier.isAddedToWatchlist).thenReturn(false);
@@ -105,7 +198,7 @@ void main() {
     final watchlistButton = find.byType(ElevatedButton);
 
     await tester.pumpWidget(_makeTestableWidget(TvSeasonDetailPage(
-      tvId: 1,
+      tv: testTvDetail,
       seasonNumber: 1,
     )));
 

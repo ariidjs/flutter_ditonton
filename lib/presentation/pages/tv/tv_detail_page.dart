@@ -55,7 +55,10 @@ class _TVDetailPageState extends State<TvDetailPage> {
               ),
             );
           } else {
-            return Text(provider.message);
+            return Text(
+              provider.message,
+              key: Key('error_message'),
+            );
           }
         },
       ),
@@ -192,6 +195,7 @@ class DetailContentTvShow extends StatelessWidget {
                                 : Container(
                                     height: 150,
                                     child: ListView.builder(
+                                      key: Key('season-tv-test'),
                                       scrollDirection: Axis.horizontal,
                                       itemCount: tv.seasons.length,
                                       itemBuilder: (context, index) {
@@ -200,12 +204,11 @@ class DetailContentTvShow extends StatelessWidget {
                                         return Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: InkWell(
-                                            onTap: () =>
-                                                Navigator.pushReplacementNamed(
+                                            onTap: () => Navigator.pushNamed(
                                               context,
                                               TvSeasonDetailPage.ROUTE_NAME,
                                               arguments: {
-                                                'tvId': tv.id,
+                                                'tvId': tv,
                                                 'seasonNumber':
                                                     tvs.seasonNumber,
                                               },
@@ -245,64 +248,63 @@ class DetailContentTvShow extends StatelessWidget {
                               style: kHeading6,
                             ),
                             SizedBox(height: 8),
-                            recommendations.length == 0
-                                ? Text('-')
-                                : Consumer<TvDetailNotifier>(
-                                    builder: (context, data, child) {
-                                      final state = data.recommendationState;
-                                      if (state == RequestState.Loading) {
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      } else if (state == RequestState.Error) {
-                                        return Text(data.message);
-                                      } else if (state == RequestState.Loaded) {
-                                        return Container(
-                                          height: 150,
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: recommendations.length,
-                                            itemBuilder: (context, index) {
-                                              final tv = recommendations[index];
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4.0),
-                                                child: InkWell(
-                                                  onTap: () => Navigator
-                                                      .pushReplacementNamed(
-                                                    context,
-                                                    TvDetailPage.ROUTE_NAME,
-                                                    arguments: tv.id,
-                                                  ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(8.0),
-                                                    ),
-                                                    child: CachedNetworkImage(
-                                                      imageUrl:
-                                                          'https://image.tmdb.org/t/p/w500${tv.posterPath}',
-                                                      placeholder:
-                                                          (context, url) =>
-                                                              Center(
-                                                        child:
-                                                            CircularProgressIndicator(),
-                                                      ),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          Icon(Icons.error),
-                                                    ),
-                                                  ),
+                            Consumer<TvDetailNotifier>(
+                              builder: (context, data, child) {
+                                final state = data.recommendationState;
+                                if (state == RequestState.Loading) {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else if (state == RequestState.Error) {
+                                  return Text(
+                                    data.message,
+                                    key: Key('error_message'),
+                                  );
+                                } else if (state == RequestState.Loaded) {
+                                  return Container(
+                                    key: Key('recommendation-tv-test'),
+                                    height: 150,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: recommendations.length,
+                                      itemBuilder: (context, index) {
+                                        final tv = recommendations[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: InkWell(
+                                            onTap: () =>
+                                                Navigator.pushReplacementNamed(
+                                              context,
+                                              TvDetailPage.ROUTE_NAME,
+                                              arguments: tv.id,
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0),
+                                              ),
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    'https://image.tmdb.org/t/p/w500${tv.posterPath}',
+                                                placeholder: (context, url) =>
+                                                    Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
                                                 ),
-                                              );
-                                            },
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
                                           ),
                                         );
-                                      } else {
-                                        return Container();
-                                      }
-                                    },
-                                  ),
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
                           ],
                         ),
                       ),

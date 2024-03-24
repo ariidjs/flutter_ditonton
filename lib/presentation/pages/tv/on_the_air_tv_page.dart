@@ -1,6 +1,5 @@
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/provider/tv/on_the_air_tv_notifier.dart';
-import 'package:ditonton/presentation/provider/tv/tv_list_notifier.dart';
 import 'package:ditonton/presentation/widgets/tv_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,18 +30,18 @@ class _OnTheAirTVPageState extends State<OnTheAirTvPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<TvListNotifier>(
+        child: Consumer<OnTheAirTvNotifier>(
           builder: (context, data, child) {
-            final state = data.onTheAirTvState;
+            final state = data.state;
             if (state == RequestState.Loading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             } else if (state == RequestState.Loaded) {
               return ListView.builder(
-                itemCount: data.onTheAirTvShows.length,
+                itemCount: data.tv.length,
                 itemBuilder: (context, index) {
-                  final tv = data.onTheAirTvShows[index];
+                  final tv = data.tv[index];
                   return TvCard(tv);
                 },
               );

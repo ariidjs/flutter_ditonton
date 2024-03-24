@@ -50,7 +50,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               ),
             );
           } else {
-            return Text(provider.message);
+            return Text(
+              provider.message,
+              key: Key('error_message'),
+            );
           }
         },
       ),
@@ -194,10 +197,14 @@ class DetailContent extends StatelessWidget {
                                   );
                                 } else if (data.recommendationState ==
                                     RequestState.Error) {
-                                  return Text(data.message);
+                                  return Text(
+                                    data.message,
+                                    key: Key('error_message'),
+                                  );
                                 } else if (data.recommendationState ==
                                     RequestState.Loaded) {
                                   return Container(
+                                    key: Key('recommendation-test'),
                                     height: 150,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,

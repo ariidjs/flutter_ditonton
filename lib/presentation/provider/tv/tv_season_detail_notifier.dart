@@ -4,7 +4,6 @@ import 'package:ditonton/domain/entities/tv/season_detail.dart';
 import 'package:ditonton/domain/entities/tv/tv_detail.dart';
 import 'package:ditonton/domain/entities/tv/tv_show.dart';
 import 'package:ditonton/domain/usecases/tv/get_tv_season_detail.dart';
-import 'package:ditonton/domain/usecases/tv/get_tv_show_detail.dart';
 import 'package:ditonton/domain/usecases/tv/get_tv_show_recommendations.dart';
 import 'package:ditonton/domain/usecases/tv/get_watchlist_tv_status.dart';
 import 'package:ditonton/domain/usecases/tv/remove_watchlist_tv.dart';
@@ -15,7 +14,6 @@ class TvSeasonDetailNotifier extends ChangeNotifier {
   static const watchlistAddSuccessMessage = 'Added to Watchlist';
   static const watchlistRemoveSuccessMessage = 'Removed from Watchlist';
 
-  final GetTvShowDetail getTvShowDetail;
   final GetTvSeasonDetail getTvSeasonDetail;
   final GetTvShowRecommendations getTvShowRecommendations;
   final GetWatchlistTvStatus getWatchlistTvStatus;
@@ -23,19 +21,12 @@ class TvSeasonDetailNotifier extends ChangeNotifier {
   final RemoveWatchlistTv removeWatchlistTv;
 
   TvSeasonDetailNotifier({
-    required this.getTvShowDetail,
     required this.getTvSeasonDetail,
     required this.getTvShowRecommendations,
     required this.getWatchlistTvStatus,
     required this.removeWatchlistTv,
     required this.saveWatchlistTv,
   });
-
-  late TvDetail _tvDetail;
-  TvDetail get tvDetail => _tvDetail;
-
-  RequestState _tvDetailState = RequestState.Empty;
-  RequestState get tvDetailState => _tvDetailState;
 
   late SeasonDetail _seasonDetail;
   SeasonDetail get seasonDetail => _seasonDetail;
@@ -58,7 +49,6 @@ class TvSeasonDetailNotifier extends ChangeNotifier {
 
     final detailResult = await getTvSeasonDetail.execute(tvId, seasonNumber);
     final recommendationResult = await getTvShowRecommendations.execute(tvId);
-    final tvDetailResult = await getTvShowDetail.execute(tvId);
 
     detailResult.fold(
       (failure) {
@@ -71,27 +61,13 @@ class TvSeasonDetailNotifier extends ChangeNotifier {
         _seasonDetail = seasonDetail;
         notifyListeners();
         recommendationResult.fold(
-          (failure) {
+          (recommendationFailure) {
             _recommendationState = RequestState.Error;
-            _message = failure.message;
+            _message = recommendationFailure.message;
             notifyListeners();
           },
-          (tvDetail) {
-            _tvDetailState = RequestState.Loading;
-            _tvRecommendations = tvDetail;
-            notifyListeners();
-            tvDetailResult.fold(
-              (failure) {
-                _tvDetailState = RequestState.Error;
-                _message = failure.message;
-                notifyListeners();
-              },
-              (tvDetail) {
-                _tvDetailState = RequestState.Loaded;
-                _tvDetail = tvDetail;
-                notifyListeners();
-              },
-            );
+          (recommendations) {
+            _tvRecommendations = recommendations;
             _recommendationState = RequestState.Loaded;
             notifyListeners();
           },

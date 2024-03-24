@@ -3,7 +3,6 @@ import 'package:ditonton/common/failure.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv/tv_show.dart';
 import 'package:ditonton/domain/usecases/tv/get_tv_season_detail.dart';
-import 'package:ditonton/domain/usecases/tv/get_tv_show_detail.dart';
 import 'package:ditonton/domain/usecases/tv/get_tv_show_recommendations.dart';
 import 'package:ditonton/domain/usecases/tv/get_watchlist_tv_status.dart';
 import 'package:ditonton/domain/usecases/tv/remove_watchlist_tv.dart';
@@ -17,7 +16,6 @@ import '../../../dummy_data/tv/tv_dummy_object.dart';
 import 'tv_season_detail_notifier_test.mocks.dart';
 
 @GenerateMocks([
-  GetTvShowDetail,
   GetTvSeasonDetail,
   GetTvShowRecommendations,
   GetWatchlistTvStatus,
@@ -26,7 +24,6 @@ import 'tv_season_detail_notifier_test.mocks.dart';
 ])
 void main() {
   late TvSeasonDetailNotifier provider;
-  late MockGetTvShowDetail mockGetTVShowDetail;
   late MockGetTvSeasonDetail mockGetTVSeasonDetail;
   late MockGetTvShowRecommendations mockGetTVShowRecommendations;
   late MockGetWatchlistTvStatus mockGetWatchlistTVStatus;
@@ -36,14 +33,12 @@ void main() {
 
   setUp(() {
     listenerCallCount = 0;
-    mockGetTVShowDetail = MockGetTvShowDetail();
     mockGetTVSeasonDetail = MockGetTvSeasonDetail();
     mockGetTVShowRecommendations = MockGetTvShowRecommendations();
     mockGetWatchlistTVStatus = MockGetWatchlistTvStatus();
     mockSaveWatchlistTV = MockSaveWatchlistTv();
     mockRemoveWatchlistTV = MockRemoveWatchlistTv();
     provider = TvSeasonDetailNotifier(
-      getTvShowDetail: mockGetTVShowDetail,
       getTvSeasonDetail: mockGetTVSeasonDetail,
       getTvShowRecommendations: mockGetTVShowRecommendations,
       getWatchlistTvStatus: mockGetWatchlistTVStatus,
@@ -78,8 +73,6 @@ void main() {
   void _arrangeUsecase() {
     when(mockGetTVSeasonDetail.execute(tId, tSeasonNumber))
         .thenAnswer((_) async => Right(testTvSeasonDetail));
-    when(mockGetTVShowDetail.execute(tId))
-        .thenAnswer((_) async => Right(testTvDetail));
     when(mockGetTVShowRecommendations.execute(tId))
         .thenAnswer((_) async => Right(tTVList));
   }
@@ -114,58 +107,11 @@ void main() {
       when(mockGetTVShowRecommendations.execute(tId))
           .thenAnswer((_) async => Right(tTVList));
 
-      when(mockGetTVShowDetail.execute(tId))
-          .thenAnswer((_) async => Right(testTvDetail));
       // act
       await provider.fetchSeasonDetail(tId, tSeasonNumber);
       // assert
       expect(provider.seasonState, RequestState.Error);
       expect(provider.message, 'Failed');
-    });
-  });
-
-  group('Get TV shows Detail', () {
-    test('should get data from the usecase', () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchSeasonDetail(tId, tSeasonNumber);
-      // assert
-      verify(mockGetTVShowDetail.execute(tId));
-      verify(mockGetTVShowRecommendations.execute(tId));
-    });
-
-    test('should change state to Loading when usecase is called', () {
-      // arrange
-      _arrangeUsecase();
-      // act
-      provider.fetchSeasonDetail(tId, tSeasonNumber);
-      // assert
-      expect(provider.seasonState, RequestState.Loading);
-      expect(listenerCallCount, 1);
-    });
-
-    test('should change TV shows when data is gotten successfully', () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchSeasonDetail(tId, tSeasonNumber);
-      // assert
-      expect(provider.seasonState, RequestState.Loaded);
-      expect(provider.tvDetail, testTvDetail);
-      expect(listenerCallCount, 6);
-    });
-
-    test(
-        'should change recommendation TV shows when data is gotten successfully',
-        () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchSeasonDetail(tId, tSeasonNumber);
-      // assert
-      expect(provider.seasonState, RequestState.Loaded);
-      expect(provider.tvRecommendations, tTVList);
     });
   });
 
@@ -199,8 +145,6 @@ void main() {
       when(mockGetTVShowRecommendations.execute(tId))
           .thenAnswer((_) async => Left(ServerFailure('Failed')));
 
-      when(mockGetTVShowDetail.execute(tId))
-          .thenAnswer((_) async => Right(testTvDetail));
       // act
       await provider.fetchSeasonDetail(tId, tSeasonNumber);
       // assert
@@ -243,6 +187,20 @@ void main() {
       verify(mockRemoveWatchlistTV.execute(testTvDetail));
     });
 
+    test('should update watchlist message when remove watchlist failed',
+        () async {
+      // arrange
+      when(mockRemoveWatchlistTV.execute(testTvDetail))
+          .thenAnswer((_) async => Left(DatabaseFailure('Failed')));
+      when(mockGetWatchlistTVStatus.execute(testTvDetail.id))
+          .thenAnswer((_) async => false);
+      // act
+      await provider.removeFromWatchlist(testTvDetail);
+      // assert
+      expect(provider.watchlistMessage, 'Failed');
+      expect(listenerCallCount, 1);
+    });
+
     test('should update watchlist status when add watchlist success', () async {
       // arrange
       when(mockSaveWatchlistTV.execute(testTvDetail))
@@ -280,9 +238,6 @@ void main() {
 
       when(mockGetTVShowRecommendations.execute(tId))
           .thenAnswer((_) async => Right(tTVList));
-
-      when(mockGetTVShowDetail.execute(tId))
-          .thenAnswer((_) async => Right(testTvDetail));
 
       // act
       await provider.fetchSeasonDetail(tId, tSeasonNumber);

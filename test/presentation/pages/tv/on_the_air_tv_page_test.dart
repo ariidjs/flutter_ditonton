@@ -1,7 +1,7 @@
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv/tv_show.dart';
-import 'package:ditonton/presentation/pages/tv/popular_tv_page.dart';
-import 'package:ditonton/presentation/provider/tv/popular_tv_notifier.dart';
+import 'package:ditonton/presentation/pages/tv/on_the_air_tv_page.dart';
+import 'package:ditonton/presentation/provider/tv/on_the_air_tv_notifier.dart';
 import 'package:ditonton/presentation/widgets/tv_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,18 +10,18 @@ import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import '../../../dummy_data/tv/tv_dummy_object.dart';
-import 'popular_tv_page_test.mocks.dart';
+import 'on_the_air_tv_page_test.mocks.dart';
 
-@GenerateMocks([PopularTvNotifier])
+@GenerateMocks([OnTheAirTvNotifier])
 void main() {
-  late MockPopularTvNotifier mockNotifier;
+  late MockOnTheAirTvNotifier mockNotifier;
 
   setUp(() {
-    mockNotifier = MockPopularTvNotifier();
+    mockNotifier = MockOnTheAirTvNotifier();
   });
 
   Widget _makeTestableWidget(Widget body) {
-    return ChangeNotifierProvider<PopularTvNotifier>.value(
+    return ChangeNotifierProvider<OnTheAirTvNotifier>.value(
       value: mockNotifier,
       child: MaterialApp(
         home: body,
@@ -36,7 +36,7 @@ void main() {
     final progressBarFinder = find.byType(CircularProgressIndicator);
     final centerFinder = find.byType(Center);
 
-    await tester.pumpWidget(_makeTestableWidget(PopularTvPage()));
+    await tester.pumpWidget(_makeTestableWidget(OnTheAirTvPage()));
 
     expect(centerFinder, findsOneWidget);
     expect(progressBarFinder, findsOneWidget);
@@ -45,11 +45,11 @@ void main() {
   testWidgets('Page should display ListView when data is loaded',
       (WidgetTester tester) async {
     when(mockNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockNotifier.tvShows).thenReturn(<TvShow>[testTv]);
+    when(mockNotifier.tv).thenReturn(<TvShow>[testTv]);
 
     final listViewFinder = find.byType(ListView);
 
-    await tester.pumpWidget(_makeTestableWidget(PopularTvPage()));
+    await tester.pumpWidget(_makeTestableWidget(OnTheAirTvPage()));
 
     expect(listViewFinder, findsOneWidget);
     expect(find.byType(TvCard), findsOneWidget);
@@ -62,7 +62,7 @@ void main() {
 
     final textFinder = find.byKey(Key('error_message'));
 
-    await tester.pumpWidget(_makeTestableWidget(PopularTvPage()));
+    await tester.pumpWidget(_makeTestableWidget(OnTheAirTvPage()));
 
     expect(textFinder, findsOneWidget);
   });

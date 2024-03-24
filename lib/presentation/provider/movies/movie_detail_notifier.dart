@@ -61,9 +61,9 @@ class MovieDetailNotifier extends ChangeNotifier {
         _movie = movie;
         notifyListeners();
         recommendationResult.fold(
-          (failure) {
+          (recommendationFailure) {
             _recommendationState = RequestState.Error;
-            _message = failure.message;
+            _message = recommendationFailure.message;
           },
           (movies) {
             _recommendationState = RequestState.Loaded;
