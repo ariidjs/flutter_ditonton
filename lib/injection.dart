@@ -46,7 +46,7 @@ import 'package:get_it/get_it.dart';
 
 final locator = GetIt.instance;
 
-void init() {
+Future<void> init() async {
   // provider
   locator.registerFactory(
     () => MovieListNotifier(
@@ -188,7 +188,8 @@ void init() {
   );
 
   // helper
-  // locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
+  locator.registerSingleton<DatabaseHelper>(
+      DatabaseHelper(database: await DatabaseHelper().initDb()));
 
   // external
   locator.registerLazySingleton(() => http.Client());

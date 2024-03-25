@@ -21,6 +21,14 @@ class TvTable extends Equatable {
         posterPath: map['posterPath'],
         overview: map['overview'],
       );
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'posterPath': posterPath,
+      'overview': overview,
+    };
+  }
 
   factory TvTable.fromEntity(TvDetail tv) => TvTable(
       id: tv.id,

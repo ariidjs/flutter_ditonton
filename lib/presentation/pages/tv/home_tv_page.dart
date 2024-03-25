@@ -99,7 +99,8 @@ class _HomeTVPageState extends State<HomeTvPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSubHeading(
-                title: 'TV Shows',
+                title: 'On The Air',
+                key: Key('on_the_air'),
                 onTap: () =>
                     Navigator.pushNamed(context, OnTheAirTvPage.ROUTE_NAME),
               ),
@@ -119,6 +120,7 @@ class _HomeTVPageState extends State<HomeTvPage> {
               ),
               _buildSubHeading(
                 title: 'Popular TV Shows',
+                key: Key('popular'),
                 onTap: () =>
                     Navigator.pushNamed(context, PopularTvPage.ROUTE_NAME),
               ),
@@ -138,6 +140,7 @@ class _HomeTVPageState extends State<HomeTvPage> {
               ),
               _buildSubHeading(
                 title: 'Top Rated TV Shows',
+                key: Key('top_rated'),
                 onTap: () =>
                     Navigator.pushNamed(context, TopRatedTvPage.ROUTE_NAME),
               ),
@@ -162,7 +165,8 @@ class _HomeTVPageState extends State<HomeTvPage> {
     );
   }
 
-  Row _buildSubHeading({required String title, required Function() onTap}) {
+  Row _buildSubHeading(
+      {required String title, required Function() onTap, required Key key}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -172,6 +176,7 @@ class _HomeTVPageState extends State<HomeTvPage> {
         ),
         InkWell(
           onTap: onTap,
+          key: key,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -202,6 +207,7 @@ class TvList extends StatelessWidget {
         itemBuilder: (context, index) {
           final tv = tvs[index];
           return Container(
+            key: Key('item_at_$index'),
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
               onTap: () => Navigator.pushNamed(
