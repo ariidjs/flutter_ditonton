@@ -1,9 +1,9 @@
-import 'package:ditonton/domain/entities/tv/episode.dart';
-import 'package:ditonton/domain/entities/tv/season_detail.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tvshow/domain/entities/episode.dart';
+import 'package:tvshow/domain/entities/season_detail.dart';
 
 class SeasonDetailResponse extends Equatable {
-  SeasonDetailResponse({
+  const SeasonDetailResponse({
     required this.id,
     required this.airDate,
     required this.episodes,
@@ -38,14 +38,14 @@ class SeasonDetailResponse extends Equatable {
 
   SeasonDetail toEntity() {
     return SeasonDetail(
-      id: this.id,
-      airDate: this.airDate,
-      episodes: this.episodes.map((eps) => eps.toEntity()).toList(),
-      name: this.name,
-      overview: this.overview,
-      seasonDetailResponseId: this.seasonDetailResponseId,
-      posterPath: this.posterPath,
-      seasonNumber: this.seasonNumber,
+      id: id,
+      airDate: airDate,
+      episodes: episodes.map((eps) => eps.toEntity()).toList(),
+      name: name,
+      overview: overview,
+      seasonDetailResponseId: seasonDetailResponseId,
+      posterPath: posterPath,
+      seasonNumber: seasonNumber,
     );
   }
 
@@ -63,7 +63,7 @@ class SeasonDetailResponse extends Equatable {
 }
 
 class EpisodeModel extends Equatable {
-  EpisodeModel({
+  const EpisodeModel({
     required this.airDate,
     required this.episodeNumber,
     required this.id,
@@ -114,20 +114,20 @@ class EpisodeModel extends Equatable {
 
   Episode toEntity() {
     return Episode(
-      airDate: this.airDate,
-      episodeNumber: this.episodeNumber,
-      id: this.id,
-      name: this.name,
-      overview: this.overview,
-      productionCode: this.productionCode,
-      runtime: this.runtime,
-      seasonNumber: this.seasonNumber,
-      showId: this.showId,
-      stillPath: this.stillPath,
-      voteAverage: this.voteAverage,
-      voteCount: this.voteCount,
-      crew: this.crew,
-      guestStars: this.guestStars,
+      airDate: airDate,
+      episodeNumber: episodeNumber,
+      id: id,
+      name: name,
+      overview: overview,
+      productionCode: productionCode,
+      runtime: runtime,
+      seasonNumber: seasonNumber,
+      showId: showId,
+      stillPath: stillPath,
+      voteAverage: voteAverage,
+      voteCount: voteCount,
+      crew: crew,
+      guestStars: guestStars,
     );
   }
 

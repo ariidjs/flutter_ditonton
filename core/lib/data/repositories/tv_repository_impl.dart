@@ -1,16 +1,14 @@
 import 'dart:io';
-
-import 'package:ditonton/common/exception.dart';
-import 'package:ditonton/data/datasources/tv/tv_local_data_source.dart';
-import 'package:ditonton/data/datasources/tv/tv_remote_data_source.dart';
-import 'package:ditonton/data/models/tv/tv_table.dart';
-import 'package:ditonton/domain/entities/tv/season_detail.dart';
-import 'package:ditonton/domain/entities/tv/tv_detail.dart';
-
-import 'package:ditonton/common/failure.dart';
 import 'package:dartz/dartz.dart';
-import 'package:ditonton/domain/entities/tv/tv_show.dart';
-import 'package:ditonton/domain/repositories/tv_repository.dart';
+import 'package:core/common/failure.dart';
+import 'package:core/common/exception.dart';
+import 'package:core/data/models/tv/tv_table.dart';
+import 'package:tvshow/domain/entities/tv_show.dart';
+import 'package:tvshow/domain/entities/tv_detail.dart';
+import 'package:tvshow/domain/entities/season_detail.dart';
+import 'package:tvshow/domain/repositories/tv_repository.dart';
+import 'package:core/data/datasources/tv/tv_local_data_source.dart';
+import 'package:core/data/datasources/tv/tv_remote_data_source.dart';
 
 class TvRepositoryImpl implements TvRepository {
   final TvRemoteDataSource remoteDataSource;
@@ -127,7 +125,7 @@ class TvRepositoryImpl implements TvRepository {
     } on DatabaseException catch (e) {
       return Left(DatabaseFailure(e.message));
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -140,7 +138,7 @@ class TvRepositoryImpl implements TvRepository {
     } on DatabaseException catch (e) {
       return Left(DatabaseFailure(e.message));
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

@@ -1,5 +1,5 @@
-import 'package:ditonton/domain/entities/tv/tv_show.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tvshow/domain/entities/tv_show.dart';
 
 class TvModel extends Equatable {
   final String? backdropPath;
@@ -16,7 +16,7 @@ class TvModel extends Equatable {
   final double voteAverage;
   final int voteCount;
 
-  TvModel({
+  const TvModel({
     required this.backdropPath,
     required this.genreIds,
     required this.id,
@@ -67,19 +67,19 @@ class TvModel extends Equatable {
 
   TvShow toEntity() {
     return TvShow(
-      backdropPath: this.backdropPath,
-      firstAirDate: this.firstAirDate,
-      genreIds: this.genreIds,
-      id: this.id,
-      name: this.name,
-      originCountry: this.originCountry,
-      originalLanguage: this.originalLanguage,
-      originalName: this.originalName,
-      overview: this.overview,
-      popularity: this.popularity,
-      posterPath: this.posterPath,
-      voteAverage: this.voteAverage,
-      voteCount: this.voteCount,
+      backdropPath: backdropPath,
+      firstAirDate: firstAirDate,
+      genreIds: genreIds,
+      id: id,
+      name: name,
+      originCountry: originCountry,
+      originalLanguage: originalLanguage,
+      originalName: originalName,
+      overview: overview,
+      popularity: popularity,
+      posterPath: posterPath,
+      voteAverage: voteAverage,
+      voteCount: voteCount,
     );
   }
 

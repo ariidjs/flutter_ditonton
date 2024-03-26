@@ -1,4 +1,4 @@
-import 'package:ditonton/presentation/widgets/tv_card_list.dart';
+import '../../../features/tvshow/lib/presentation/widgets/tv_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

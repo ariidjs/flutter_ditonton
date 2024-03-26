@@ -5,7 +5,7 @@ import 'package:ditonton/domain/entities/tv/tv_show.dart';
 import 'package:ditonton/domain/usecases/tv/get_tv_season_detail.dart';
 import 'package:ditonton/domain/usecases/tv/get_tv_show_recommendations.dart';
 import 'package:ditonton/domain/usecases/tv/get_watchlist_tv_status.dart';
-import 'package:ditonton/domain/usecases/tv/remove_watchlist_tv.dart';
+import '../../../../core/lib/domain/usecases/tv/remove_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/tv/save_watchlist_tv.dart';
 import 'package:ditonton/presentation/provider/tv/tv_season_detail_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';

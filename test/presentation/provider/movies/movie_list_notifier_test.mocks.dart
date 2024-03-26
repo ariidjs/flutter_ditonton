@@ -12,7 +12,7 @@ import 'package:ditonton/domain/repositories/movie_repository.dart' as _i2;
 import 'package:ditonton/domain/usecases/movies/get_now_playing_movies.dart'
     as _i4;
 import 'package:ditonton/domain/usecases/movies/get_popular_movies.dart' as _i8;
-import 'package:ditonton/domain/usecases/movies/get_top_rated_movies.dart'
+import '../../../../core/lib/domain/usecases/movies/get_top_rated_movies.dart'
     as _i9;
 import 'package:mockito/mockito.dart' as _i1;
 

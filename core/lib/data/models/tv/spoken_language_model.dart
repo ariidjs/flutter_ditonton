@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class SpokenLanguageModel extends Equatable {
-  SpokenLanguageModel({
+  const SpokenLanguageModel({
     required this.englishName,
     required this.iso6391,
     required this.name,

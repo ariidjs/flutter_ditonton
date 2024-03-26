@@ -1,7 +1,8 @@
-import 'package:core/common/failure.dart';
-import 'package:core/domain/entities/tv/season_detail.dart';
-import 'package:core/domain/repositories/tv_repository.dart';
 import 'package:dartz/dartz.dart';
+import 'package:core/common/failure.dart';
+import '../repositories/tv_repository.dart';
+import 'package:tvshow/domain/entities/season_detail.dart';
+
 
 class GetTvSeasonDetail {
   final TvRepository repository;

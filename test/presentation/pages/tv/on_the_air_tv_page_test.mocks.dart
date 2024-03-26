@@ -8,9 +8,9 @@ import 'dart:ui' as _i8;
 
 import 'package:ditonton/common/state_enum.dart' as _i4;
 import 'package:ditonton/domain/entities/tv/tv_show.dart' as _i5;
-import 'package:ditonton/domain/usecases/tv/get_on_the_air_tv_shows.dart'
+import '../../../../core/lib/domain/usecases/tv/get_on_the_air_tv_shows.dart'
     as _i2;
-import 'package:ditonton/presentation/provider/tv/on_the_air_tv_notifier.dart'
+import '../../../../features/tvshow/lib/presentation/providers/on_the_air_tv_notifier.dart'
     as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;

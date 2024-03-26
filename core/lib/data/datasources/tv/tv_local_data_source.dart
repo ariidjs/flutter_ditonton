@@ -1,6 +1,7 @@
-import 'package:ditonton/common/exception.dart';
-import 'package:ditonton/data/datasources/db/database_helper.dart';
-import 'package:ditonton/data/models/tv/tv_table.dart';
+import 'package:core/common/exception.dart';
+
+import '../db/database_helper.dart';
+import '../../models/tv/tv_table.dart';
 
 abstract class TvLocalDataSource {
   Future<String> insertWatchlist(TvTable tvShow);

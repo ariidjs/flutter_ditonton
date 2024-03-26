@@ -1,14 +1,13 @@
-import 'package:ditonton/data/models/movies/genre_model.dart';
-import 'package:ditonton/data/models/tv/last_episode_to_air_model.dart';
-import 'package:ditonton/data/models/tv/network_model.dart';
-import 'package:ditonton/data/models/tv/season_model.dart';
-import 'package:ditonton/data/models/tv/spoken_language_model.dart';
-import 'package:ditonton/domain/entities/tv/season.dart';
-import 'package:ditonton/domain/entities/tv/tv_detail.dart';
+import 'network_model.dart';
+import 'spoken_language_model.dart';
 import 'package:equatable/equatable.dart';
+import 'package:core/data/models/tv/season_model.dart';
+import 'package:tvshow/domain/entities/tv_detail.dart';
+import 'package:core/data/models/tv/genre_tv_model.dart';
+import 'package:core/data/models/tv/last_episode_to_air_model.dart';
 
 class TvDetailResponse extends Equatable {
-  TvDetailResponse({
+  const TvDetailResponse({
     required this.adult,
     required this.backdropPath,
     required this.createdBy,
@@ -48,7 +47,7 @@ class TvDetailResponse extends Equatable {
   final List<dynamic> createdBy;
   final List<int> episodeRunTime;
   final DateTime? firstAirDate;
-  final List<GenreModel> genres;
+  final List<GenreTvModel> genres;
   final String homepage;
   final int id;
   final bool inProduction;
@@ -83,8 +82,8 @@ class TvDetailResponse extends Equatable {
         createdBy: List<dynamic>.from(json["created_by"].map((x) => x)),
         episodeRunTime: List<int>.from(json["episode_run_time"].map((x) => x)),
         firstAirDate: DateTime.parse(json["first_air_date"]),
-        genres: List<GenreModel>.from(
-            json["genres"].map((x) => GenreModel.fromJson(x))),
+        genres: List<GenreTvModel>.from(
+            json["genres"].map((x) => GenreTvModel.fromJson(x))),
         homepage: json["homepage"],
         id: json["id"],
         inProduction: json["in_production"],
@@ -93,9 +92,7 @@ class TvDetailResponse extends Equatable {
         lastEpisodeToAir:
             LastEpisodeToAirModel.fromJson(json["last_episode_to_air"]),
         name: json["name"],
-        nextEpisodeToAir: json["next_episode_to_air"] == null
-            ? null
-            : json["next_episode_to_air"],
+        nextEpisodeToAir: json["next_episode_to_air"],
         networks: List<NetworkModel>.from(
             json["networks"].map((x) => NetworkModel.fromJson(x))),
         numberOfEpisodes: json["number_of_episodes"],
@@ -123,29 +120,29 @@ class TvDetailResponse extends Equatable {
 
   TvDetail toEntity() {
     return TvDetail(
-      backdropPath: this.backdropPath,
-      genres: this.genres.map((genre) => genre.toEntity()).toList(),
-      homepage: this.homepage,
-      id: this.id,
-      inProduction: this.inProduction,
-      languages: this.languages,
-      lastAirDate: this.lastAirDate,
-      name: this.name,
-      numberOfEpisodes: this.numberOfEpisodes,
-      numberOfSeasons: this.numberOfSeasons,
-      seasons: this.seasons.map((s) => s.toEntity()).toList(),
-      originCountry: this.originCountry,
-      originalLanguage: this.originalLanguage,
-      originalName: this.originalName,
-      overview: this.overview,
-      popularity: this.popularity,
-      posterPath: this.posterPath,
-      productionCompanies: this.productionCompanies,
-      status: this.status,
-      tagline: this.tagline,
-      type: this.type,
-      voteAverage: this.voteAverage,
-      voteCount: this.voteCount,
+      backdropPath: backdropPath,
+      genres: genres.map((genre) => genre.toEntity()).toList(),
+      homepage: homepage,
+      id: id,
+      inProduction: inProduction,
+      languages: languages,
+      lastAirDate: lastAirDate,
+      name: name,
+      numberOfEpisodes: numberOfEpisodes,
+      numberOfSeasons: numberOfSeasons,
+      seasons: seasons.map((s) => s.toEntity()).toList(),
+      originCountry: originCountry,
+      originalLanguage: originalLanguage,
+      originalName: originalName,
+      overview: overview,
+      popularity: popularity,
+      posterPath: posterPath,
+      productionCompanies: productionCompanies,
+      status: status,
+      tagline: tagline,
+      type: type,
+      voteAverage: voteAverage,
+      voteCount: voteCount,
     );
   }
 

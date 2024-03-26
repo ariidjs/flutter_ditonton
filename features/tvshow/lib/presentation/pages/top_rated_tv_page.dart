@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../widgets/tv_card_list.dart';
-import 'package:core/common/state_enum.dart';
-import '../../provider/tv/top_rated_tv_notifier.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tvshow/presentation/bloc/tv_bloc.dart';
+import 'package:tvshow/presentation/widgets/tv_card_list.dart';
 
 class TopRatedTvPage extends StatefulWidget {
   static const ROUTE_NAME = '/top_rated_tv';
 
-  const TopRatedTvPage({Key? key}) : super(key: key);
+  const TopRatedTvPage({super.key});
 
   @override
   State<TopRatedTvPage> createState() => _TopRatedTVPageState();
@@ -18,39 +16,38 @@ class _TopRatedTVPageState extends State<TopRatedTvPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<TopRatedTvNotifier>(context, listen: false)
-            .fetchTopRatedTvShows());
+    Future.microtask(() => context.read<TopRatedTvBloc>().add(TopRatedTv()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Top Rated TV Shows'),
+        title: const Text('Top Rated TV Shows'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<TopRatedTvNotifier>(
-          builder: (context, data, child) {
-            final state = data.state;
-            if (state == RequestState.Loading) {
-              return Center(
+        child: BlocBuilder<TopRatedTvBloc, TvState>(
+          builder: (context, state) {
+            if (state is TvLoading) {
+              return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state == RequestState.Loaded) {
+            } else if (state is TvSuccess) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tv = data.tvShows[index];
-                  return TvCard(tv);
+                  final movie = state.tvList[index];
+                  return TvCard(movie);
                 },
-                itemCount: data.tvShows.length,
+                itemCount: state.tvList.length,
+              );
+            } else if (state is TvError) {
+              return Center(
+                key: const Key('error_message'),
+                child: Text(state.message),
               );
             } else {
-              return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
-              );
+              return Container();
             }
           },
         ),

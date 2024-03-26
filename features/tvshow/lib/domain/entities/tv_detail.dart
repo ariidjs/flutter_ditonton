@@ -1,6 +1,8 @@
+import 'genre.dart';
 import 'season.dart';
 import 'package:equatable/equatable.dart';
-import 'package:movies/domain/entities/genre.dart';
+
+// ignore_for_file: depend_on_referenced_packages
 
 class TvDetail extends Equatable {
   const TvDetail({

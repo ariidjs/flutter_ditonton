@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class LastEpisodeToAirModel extends Equatable {
-  LastEpisodeToAirModel({
+  const LastEpisodeToAirModel({
     required this.airDate,
     required this.episodeNumber,
     required this.id,
@@ -37,10 +37,10 @@ class LastEpisodeToAirModel extends Equatable {
         name: json["name"],
         overview: json["overview"],
         productionCode: json["production_code"],
-        runtime: json["runtime"] == null ? null : json["runtime"],
+        runtime: json["runtime"],
         seasonNumber: json["season_number"],
         showId: json["show_id"],
-        stillPath: json["still_path"] == null ? null : json["still_path"],
+        stillPath: json["still_path"],
         voteAverage: json["vote_average"],
         voteCount: json["vote_count"],
       );

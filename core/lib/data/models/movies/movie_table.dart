@@ -1,6 +1,6 @@
-import 'package:ditonton/domain/entities/movies/movie.dart';
-import 'package:ditonton/domain/entities/movies/movie_detail.dart';
 import 'package:equatable/equatable.dart';
+import 'package:movies/domain/entities/movie.dart';
+import 'package:movies/domain/entities/movie_detail.dart';
 
 class MovieTable extends Equatable {
   final int id;
@@ -8,7 +8,7 @@ class MovieTable extends Equatable {
   final String? posterPath;
   final String? overview;
 
-  MovieTable({
+  const MovieTable({
     required this.id,
     required this.title,
     required this.posterPath,

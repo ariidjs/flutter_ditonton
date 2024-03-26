@@ -1,6 +1,6 @@
-import 'package:ditonton/domain/entities/tv/tv_detail.dart';
-import 'package:ditonton/domain/entities/tv/tv_show.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tvshow/domain/entities/tv_show.dart';
+import 'package:tvshow/domain/entities/tv_detail.dart';
 
 class TvTable extends Equatable {
   final int id;
@@ -8,7 +8,7 @@ class TvTable extends Equatable {
   final String? posterPath;
   final String? overview;
 
-  TvTable({
+  const TvTable({
     required this.id,
     required this.name,
     required this.posterPath,

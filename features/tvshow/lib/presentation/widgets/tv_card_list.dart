@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import '../pages/tv/tv_detail_page.dart';
 import 'package:core/common/constants.dart';
-import 'package:core/domain/entities/tv/tv_show.dart';
+import 'package:tvshow/domain/entities/tv_show.dart';
+import 'package:tvshow/presentation/pages/tv_detail_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
 
 class TvCard extends StatelessWidget {
   final TvShow tv;
 
-  const TvCard(this.tv);
+  const TvCard(this.tv, {super.key});
 
   @override
   Widget build(BuildContext context) {

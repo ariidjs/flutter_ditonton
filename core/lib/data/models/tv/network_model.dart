@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class NetworkModel extends Equatable {
-  NetworkModel({
+  const NetworkModel({
     required this.id,
     required this.name,
     required this.logoPath,

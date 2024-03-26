@@ -4,20 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:core/common/constants.dart';
 import 'package:core/common/state_enum.dart';
-import '../../provider/tv/tv_detail_notifier.dart';
-import 'package:core/domain/entities/tv/tv_show.dart';
-import 'package:core/domain/entities/movies/genre.dart';
-import 'package:core/domain/entities/tv/tv_detail.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tvshow/domain/entities/genre.dart';
+import 'package:tvshow/domain/entities/tv_show.dart';
+import 'package:tvshow/presentation/bloc/tv_bloc.dart';
+import 'package:tvshow/domain/entities/tv_detail.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
-
 
 class TvDetailPage extends StatefulWidget {
   static const ROUTE_NAME = '/detail_tv';
   final int id;
 
-  const TvDetailPage({required this.id});
+  const TvDetailPage({super.key, required this.id});
 
   @override
   State<TvDetailPage> createState() => _TVDetailPageState();
@@ -28,38 +27,49 @@ class _TVDetailPageState extends State<TvDetailPage> {
   void initState() {
     super.initState();
 
-    Future.microtask(() async {
-      await Provider.of<TvDetailNotifier>(context, listen: false)
-          .fetchTvShowDetail(widget.id);
-      await Provider.of<TvDetailNotifier>(context, listen: false)
-          .loadWatchlistStatus(widget.id);
+    Future.microtask(() {
+      context.read<TvDetailBloc>().add(TvDetails(widget.id));
+      context.read<TvRecommendationBloc>().add(TvRecommendations(widget.id));
+      context.read<TvWatchlistBloc>().add(WatchlistStatusTv(widget.id));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<TvDetailNotifier>(
-        builder: (context, provider, child) {
-          final state = provider.tvState;
-
-          if (state == RequestState.Loading) {
-            return Center(
+      body: BlocBuilder<TvDetailBloc, TvState>(
+        builder: (context, state) {
+          if (state is TvLoading) {
+            return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (state == RequestState.Loaded) {
+          } else if (state is TvDetailSuccess) {
+            final tvRecommendations =
+                context.select<TvRecommendationBloc, List<TvShow>>((value) {
+              final recommendationState = value.state;
+              return recommendationState is TvSuccess
+                  ? recommendationState.tvList
+                  : [];
+            });
+            final isAddedToWatchlist =
+                context.select<TvWatchlistBloc, bool>((TvWatchlistBloc value) {
+              final state = value.state;
+              return state is TvWatchlistStatus ? state.status : false;
+            });
             return SafeArea(
               child: DetailContentTvShow(
-                tv: provider.tvDetail,
-                recommendations: provider.tvRecommendations,
-                isAddedWatchlist: provider.isAddedToWatchlist,
+                tv: state.tvDetail,
+                recommendations: tvRecommendations,
+                isAddedWatchlist: isAddedToWatchlist,
               ),
             );
-          } else {
+          } else if (state is TvError) {
             return Text(
-              provider.message,
-              key: Key('error_message'),
+              state.message,
+              key: const Key('error_message'),
             );
+          } else {
+            return Container();
           }
         },
       ),
@@ -73,6 +83,7 @@ class DetailContentTvShow extends StatelessWidget {
   final bool isAddedWatchlist;
 
   const DetailContentTvShow({
+    super.key,
     required this.tv,
     required this.recommendations,
     required this.isAddedWatchlist,
@@ -87,8 +98,8 @@ class DetailContentTvShow extends StatelessWidget {
           imageUrl: 'https://image.tmdb.org/t/p/w500${tv.posterPath}',
           width: sizeWidth,
           placeholder: (context, url) =>
-              Center(child: CircularProgressIndicator()),
-          errorWidget: (context, url, error) => Icon(Icons.error),
+              const Center(child: CircularProgressIndicator()),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
         Container(
           margin: const EdgeInsets.only(top: 48 + 8),
@@ -96,7 +107,7 @@ class DetailContentTvShow extends StatelessWidget {
             minChildSize: 0.25,
             builder: (context, scrollController) {
               return Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: kRichBlack,
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(16.0)),
@@ -122,28 +133,30 @@ class DetailContentTvShow extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () async {
                                 if (!isAddedWatchlist) {
-                                  await Provider.of<TvDetailNotifier>(context,
-                                          listen: false)
-                                      .addWatchlist(tv);
+                                  context
+                                      .read<TvWatchlistBloc>()
+                                      .add(SaveTvWatchlist(tv));
                                 } else {
-                                  await Provider.of<TvDetailNotifier>(context,
-                                          listen: false)
-                                      .removeFromWatchlist(tv);
+                                  context
+                                      .read<TvWatchlistBloc>()
+                                      .add(RemoveTvWatchlist(tv));
                                 }
 
-                                final message = Provider.of<TvDetailNotifier>(
-                                        context,
-                                        listen: false)
-                                    .watchlistMessage;
+                                String message = !isAddedWatchlist
+                                    ? TvWatchlistBloc.watchlistAddSuccessMessage
+                                    : TvWatchlistBloc
+                                        .watchlistRemoveSuccessMessage;
 
-                                if (message ==
-                                        TvDetailNotifier
-                                            .watchlistAddSuccessMessage ||
-                                    message ==
-                                        TvDetailNotifier
-                                            .watchlistRemoveSuccessMessage) {
+                                final state =
+                                    BlocProvider.of<TvWatchlistBloc>(context)
+                                        .state;
+
+                                if (state is WatchlistTvMessage ||
+                                    state is TvWatchlistStatus) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text(message)));
+                                  BlocProvider.of<TvWatchlistBloc>(context)
+                                      .add(WatchlistStatusTv(tv.id));
                                 } else {
                                   showDialog(
                                     context: context,
@@ -156,9 +169,9 @@ class DetailContentTvShow extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   isAddedWatchlist
-                                      ? Icon(Icons.check)
-                                      : Icon(Icons.add),
-                                  Text(' Watchlist'),
+                                      ? const Icon(Icons.check)
+                                      : const Icon(Icons.add),
+                                  const Text(' Watchlist'),
                                 ],
                               ),
                             ),
@@ -166,7 +179,7 @@ class DetailContentTvShow extends StatelessWidget {
                             Row(
                               children: [
                                 RatingBarIndicator(
-                                  itemBuilder: (context, index) => Icon(
+                                  itemBuilder: (context, index) => const Icon(
                                     Icons.star,
                                     color: kMikadoYellow,
                                   ),
@@ -177,7 +190,7 @@ class DetailContentTvShow extends StatelessWidget {
                                 Text('${tv.voteAverage}'),
                               ],
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Text(
                               'Overview',
                               style: kHeading6,
@@ -185,18 +198,18 @@ class DetailContentTvShow extends StatelessWidget {
                             Text(
                               tv.overview == '' ? '-' : tv.overview,
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Text(
                               '${tv.seasons.length} Seasons',
                               style: kHeading6,
                             ),
-                            SizedBox(height: 8),
-                            tv.seasons.length == 0
-                                ? Text('-')
-                                : Container(
+                            const SizedBox(height: 8),
+                            tv.seasons.isEmpty
+                                ? const Text('-')
+                                : SizedBox(
                                     height: 150,
                                     child: ListView.builder(
-                                      key: Key('season-tv-test'),
+                                      key: const Key('season-tv-test'),
                                       scrollDirection: Axis.horizontal,
                                       itemCount: tv.seasons.length,
                                       itemBuilder: (context, index) {
@@ -215,7 +228,8 @@ class DetailContentTvShow extends StatelessWidget {
                                               },
                                             ),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
+                                              borderRadius:
+                                                  const BorderRadius.all(
                                                 Radius.circular(8.0),
                                               ),
                                               child: tvs.posterPath == null
@@ -229,13 +243,14 @@ class DetailContentTvShow extends StatelessWidget {
                                                           'https://image.tmdb.org/t/p/w500${tvs.posterPath}',
                                                       placeholder:
                                                           (context, url) =>
-                                                              Center(
+                                                              const Center(
                                                         child:
                                                             CircularProgressIndicator(),
                                                       ),
                                                       errorWidget: (context,
                                                               url, error) =>
-                                                          Icon(Icons.error),
+                                                          const Icon(
+                                                              Icons.error),
                                                     ),
                                             ),
                                           ),
@@ -243,27 +258,26 @@ class DetailContentTvShow extends StatelessWidget {
                                       },
                                     ),
                                   ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Text(
                               'Recommendations',
                               style: kHeading6,
                             ),
-                            SizedBox(height: 8),
-                            Consumer<TvDetailNotifier>(
-                              builder: (context, data, child) {
-                                final state = data.recommendationState;
-                                if (state == RequestState.Loading) {
-                                  return Center(
+                            const SizedBox(height: 8),
+                            BlocBuilder<TvRecommendationBloc, TvState>(
+                              builder: (context, state) {
+                                if (state is TvLoading) {
+                                  return const Center(
                                     child: CircularProgressIndicator(),
                                   );
-                                } else if (state == RequestState.Error) {
+                                } else if (state is TvError) {
                                   return Text(
-                                    data.message,
-                                    key: Key('error_message'),
+                                    state.message,
+                                    key: const Key('error_message'),
                                   );
-                                } else if (state == RequestState.Loaded) {
-                                  return Container(
-                                    key: Key('recommendation-tv-test'),
+                                } else if (state is TvSuccess) {
+                                  return SizedBox(
+                                    key: const Key('recommendation-tv-test'),
                                     height: 150,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
@@ -280,20 +294,21 @@ class DetailContentTvShow extends StatelessWidget {
                                               arguments: tv.id,
                                             ),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
+                                              borderRadius:
+                                                  const BorderRadius.all(
                                                 Radius.circular(8.0),
                                               ),
                                               child: CachedNetworkImage(
                                                 imageUrl:
                                                     'https://image.tmdb.org/t/p/w500${tv.posterPath}',
                                                 placeholder: (context, url) =>
-                                                    Center(
+                                                    const Center(
                                                   child:
                                                       CircularProgressIndicator(),
                                                 ),
                                                 errorWidget:
                                                     (context, url, error) =>
-                                                        Icon(Icons.error),
+                                                        const Icon(Icons.error),
                                               ),
                                             ),
                                           ),
@@ -330,7 +345,7 @@ class DetailContentTvShow extends StatelessWidget {
             backgroundColor: kRichBlack,
             foregroundColor: Colors.white,
             child: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -342,7 +357,7 @@ class DetailContentTvShow extends StatelessWidget {
   String _showGenres(List<Genre> genres) {
     String result = '';
     for (var genre in genres) {
-      result += genre.name + ', ';
+      result += '${genre.name}, ';
     }
 
     if (result.isEmpty) {

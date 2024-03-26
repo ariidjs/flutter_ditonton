@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:ditonton/data/models/movies/movie_detail_model.dart';
-import 'package:ditonton/data/models/movies/movie_model.dart';
-import 'package:ditonton/data/models/movies/movie_response.dart';
-import 'package:ditonton/common/exception.dart';
+import 'package:core/common/exception.dart';
+import 'package:core/data/models/movies/movie_detail_model.dart';
+import 'package:core/data/models/movies/movie_response.dart';
+
+import '../../models/movies/movie_model.dart';
 import 'package:http/http.dart' as http;
 
 abstract class MovieRemoteDataSource {

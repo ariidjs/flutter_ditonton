@@ -3,7 +3,7 @@ import 'package:ditonton/domain/entities/movies/genre.dart';
 import 'package:ditonton/domain/entities/tv/episode.dart';
 import 'package:ditonton/domain/entities/tv/season.dart';
 import 'package:ditonton/domain/entities/tv/season_detail.dart';
-import 'package:ditonton/domain/entities/tv/tv_detail.dart';
+import '../../../core/lib/domain/entities/tv/tv_detail.dart';
 import 'package:ditonton/domain/entities/tv/tv_show.dart';
 
 final testTv = TvShow(

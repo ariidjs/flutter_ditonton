@@ -1,4 +1,4 @@
-import 'package:ditonton/presentation/widgets/movie_card_list.dart';
+import '../../../features/movies/lib/presentation/widgets/movie_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../dummy_data/movies/dummy_objects.dart';

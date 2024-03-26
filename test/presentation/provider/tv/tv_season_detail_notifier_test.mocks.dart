@@ -8,15 +8,15 @@ import 'dart:async' as _i5;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:ditonton/common/failure.dart' as _i6;
 import 'package:ditonton/domain/entities/tv/season_detail.dart' as _i7;
-import 'package:ditonton/domain/entities/tv/tv_detail.dart' as _i12;
+import '../../../../core/lib/domain/entities/tv/tv_detail.dart' as _i12;
 import 'package:ditonton/domain/entities/tv/tv_show.dart' as _i9;
 import 'package:ditonton/domain/repositories/tv_repository.dart' as _i2;
-import 'package:ditonton/domain/usecases/tv/get_tv_season_detail.dart' as _i4;
-import 'package:ditonton/domain/usecases/tv/get_tv_show_recommendations.dart'
+import '../../../../core/lib/domain/usecases/tv/get_tv_season_detail.dart' as _i4;
+import '../../../../core/lib/domain/usecases/tv/get_tv_show_recommendations.dart'
     as _i8;
 import 'package:ditonton/domain/usecases/tv/get_watchlist_tv_status.dart'
     as _i10;
-import 'package:ditonton/domain/usecases/tv/remove_watchlist_tv.dart' as _i13;
+import '../../../../core/lib/domain/usecases/tv/remove_watchlist_tv.dart' as _i13;
 import 'package:ditonton/domain/usecases/tv/save_watchlist_tv.dart' as _i11;
 import 'package:mockito/mockito.dart' as _i1;
 

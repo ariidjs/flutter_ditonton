@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:core/common/utils.dart';
-import 'package:provider/provider.dart';
-import '../../widgets/tv_card_list.dart';
 import 'package:core/common/constants.dart';
-import 'package:core/common/state_enum.dart';
-import '../../provider/tv/watchlist_tv_notifier.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tvshow/presentation/bloc/tv_bloc.dart';
+import 'package:tvshow/presentation/widgets/tv_card_list.dart';
 
 class WatchlistTvPage extends StatefulWidget {
   static const ROUTE_NAME = '/watchlist_tv';
-  const WatchlistTvPage({Key? key}) : super(key: key);
+  const WatchlistTvPage({super.key});
 
   @override
   State<WatchlistTvPage> createState() => _WatchlistTVPageState();
@@ -18,9 +17,7 @@ class _WatchlistTVPageState extends State<WatchlistTvPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<WatchlistTvNotifier>(context, listen: false)
-            .fetchWatchlistTvShows());
+    Future.microtask(() => context.read<TvWatchlistBloc>().add(WatchlistTv()));
   }
 
   @override
@@ -29,34 +26,33 @@ class _WatchlistTVPageState extends State<WatchlistTvPage> with RouteAware {
     routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
+  @override
   void didPopNext() {
-    Provider.of<WatchlistTvNotifier>(context, listen: false)
-        .fetchWatchlistTvShows();
+    context.read<TvWatchlistBloc>().add(WatchlistTv());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Watchlist TV Shows'),
+        title: const Text('Watchlist TV Shows'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<WatchlistTvNotifier>(
-          builder: (context, data, child) {
-            final state = data.watchlistState;
-            if (state == RequestState.Loading) {
-              return Center(
+        child: BlocBuilder<TvWatchlistBloc, TvState>(
+          builder: (context, state) {
+            if (state is TvLoading) {
+              return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state == RequestState.Loaded) {
-              final result = data.watchlistTvShows;
+            } else if (state is TvSuccess) {
+              final result = state.tvList;
               if (result.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       Text(
                         'Watchlist not found',
                         style: kHeading6.copyWith(
@@ -64,7 +60,7 @@ class _WatchlistTVPageState extends State<WatchlistTvPage> with RouteAware {
                           fontSize: 16,
                         ),
                       ),
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                     ],
                   ),
                 );
@@ -76,11 +72,13 @@ class _WatchlistTVPageState extends State<WatchlistTvPage> with RouteAware {
                 },
                 itemCount: result.length,
               );
-            } else {
+            } else if (state is TvError) {
               return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
+                key: const Key('error_message'),
+                child: Text(state.message),
               );
+            } else {
+              return Container();
             }
           },
         ),

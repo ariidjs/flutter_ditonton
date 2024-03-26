@@ -1,7 +1,9 @@
-import 'package:core/common/failure.dart';
-import 'package:core/domain/entities/movies/movie.dart';
-import 'package:core/domain/entities/movies/movie_detail.dart';
+import '../entities/movie.dart';
 import 'package:dartz/dartz.dart';
+import '../entities/movie_detail.dart';
+import 'package:core/common/failure.dart';
+
+
 
 abstract class MovieRepository {
   Future<Either<Failure, List<Movie>>> getNowPlayingMovies();

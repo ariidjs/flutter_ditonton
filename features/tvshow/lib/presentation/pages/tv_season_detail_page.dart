@@ -1,16 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:core/common/constants.dart';
-import 'package:core/common/state_enum.dart';
-import 'package:core/domain/entities/movies/genre.dart';
-import 'package:core/domain/entities/tv/season_detail.dart';
-import 'package:core/domain/entities/tv/tv_detail.dart';
-import 'package:core/domain/entities/tv/tv_show.dart';
-
-import 'package:ditonton/presentation/pages/tv/tv_detail_page.dart';
-import 'package:ditonton/presentation/provider/tv/tv_season_detail_notifier.dart';
+import 'tv_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:core/common/constants.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tvshow/domain/entities/genre.dart';
+import 'package:tvshow/domain/entities/tv_show.dart';
+import 'package:tvshow/presentation/bloc/tv_bloc.dart';
+import 'package:tvshow/domain/entities/tv_detail.dart';
+import 'package:tvshow/domain/entities/season_detail.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+
 
 class TvSeasonDetailPage extends StatefulWidget {
   static const ROUTE_NAME = '/season_detail_tv';
@@ -18,6 +18,7 @@ class TvSeasonDetailPage extends StatefulWidget {
   final int seasonNumber;
 
   const TvSeasonDetailPage({
+    super.key,
     required this.tv,
     required this.seasonNumber,
   });
@@ -31,39 +32,52 @@ class _TVSeasonDetailPageState extends State<TvSeasonDetailPage> {
   void initState() {
     super.initState();
 
-    Future.microtask(() async {
-      await Provider.of<TvSeasonDetailNotifier>(context, listen: false)
-          .fetchSeasonDetail(widget.tv.id, widget.seasonNumber);
-      await Provider.of<TvSeasonDetailNotifier>(context, listen: false)
-          .loadWatchlistStatus(widget.tv.id);
+    Future.microtask(() {
+      context
+          .read<TvSeasonDetailBloc>()
+          .add(TvSeasonDetail(widget.tv.id, widget.seasonNumber));
+      context.read<TvRecommendationBloc>().add(TvRecommendations(widget.tv.id));
+      context.read<TvWatchlistBloc>().add(WatchlistStatusTv(widget.tv.id));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<TvSeasonDetailNotifier>(
-        builder: (context, provider, child) {
-          final state = provider.seasonState;
-
-          if (state == RequestState.Loading) {
-            return Center(
+      body: BlocBuilder<TvSeasonDetailBloc, TvState>(
+        builder: (context, state) {
+          if (state is TvLoading) {
+            return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (state == RequestState.Loaded) {
+          } else if (state is TvSeasonDetailSuccess) {
+            final tvRecommendations =
+                context.select<TvRecommendationBloc, List<TvShow>>((value) {
+              final recommendationState = value.state;
+              return recommendationState is TvSuccess
+                  ? recommendationState.tvList
+                  : [];
+            });
+            final isAddedToWatchlist =
+                context.select<TvWatchlistBloc, bool>((TvWatchlistBloc value) {
+              final state = value.state;
+              return state is TvWatchlistStatus ? state.status : false;
+            });
             return SafeArea(
               child: DetailSeasonContent(
                 tv: widget.tv,
-                season: provider.seasonDetail,
-                recommendations: provider.tvRecommendations,
-                isAddedWatchlist: provider.isAddedToWatchlist,
+                season: state.tvSeason,
+                recommendations: tvRecommendations,
+                isAddedWatchlist: isAddedToWatchlist,
               ),
             );
-          } else {
+          } else if (state is TvError) {
             return Text(
-              provider.message,
-              key: Key('error_message'),
+              state.message,
+              key: const Key('error_message'),
             );
+          } else {
+            return Container();
           }
         },
       ),
@@ -78,6 +92,7 @@ class DetailSeasonContent extends StatelessWidget {
   final bool isAddedWatchlist;
 
   const DetailSeasonContent({
+    super.key,
     required this.tv,
     required this.season,
     required this.recommendations,
@@ -96,8 +111,8 @@ class DetailSeasonContent extends StatelessWidget {
                 imageUrl: 'https://image.tmdb.org/t/p/w500${season.posterPath}',
                 width: sizeWidth,
                 placeholder: (context, url) =>
-                    Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+                    const Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
         Container(
           margin: const EdgeInsets.only(top: 48 + 8),
@@ -105,7 +120,7 @@ class DetailSeasonContent extends StatelessWidget {
             minChildSize: 0.25,
             builder: (context, scrollController) {
               return Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: kRichBlack,
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(16.0)),
@@ -131,28 +146,25 @@ class DetailSeasonContent extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () async {
                                 if (!isAddedWatchlist) {
-                                  await Provider.of<TvSeasonDetailNotifier>(
-                                          context,
-                                          listen: false)
-                                      .addWatchlist(tv);
+                                  context
+                                      .read<TvWatchlistBloc>()
+                                      .add(SaveTvWatchlist(tv));
                                 } else {
-                                  await Provider.of<TvSeasonDetailNotifier>(
-                                          context,
-                                          listen: false)
-                                      .removeFromWatchlist(tv);
+                                  context
+                                      .read<TvWatchlistBloc>()
+                                      .add(RemoveTvWatchlist(tv));
                                 }
 
-                                final message =
-                                    Provider.of<TvSeasonDetailNotifier>(context,
-                                            listen: false)
-                                        .watchlistMessage;
+                                String message = !isAddedWatchlist
+                                    ? TvWatchlistBloc.watchlistAddSuccessMessage
+                                    : TvWatchlistBloc
+                                        .watchlistRemoveSuccessMessage;
 
-                                if (message ==
-                                        TvSeasonDetailNotifier
-                                            .watchlistAddSuccessMessage ||
-                                    message ==
-                                        TvSeasonDetailNotifier
-                                            .watchlistRemoveSuccessMessage) {
+                                final state =
+                                    BlocProvider.of<TvWatchlistBloc>(context)
+                                        .state;
+                                if (state is WatchlistTvMessage ||
+                                    state is TvWatchlistStatus) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text(message)));
                                 } else {
@@ -167,9 +179,9 @@ class DetailSeasonContent extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   isAddedWatchlist
-                                      ? Icon(Icons.check)
-                                      : Icon(Icons.add),
-                                  Text(' Watchlist'),
+                                      ? const Icon(Icons.check)
+                                      : const Icon(Icons.add),
+                                  const Text(' Watchlist'),
                                 ],
                               ),
                             ),
@@ -177,7 +189,7 @@ class DetailSeasonContent extends StatelessWidget {
                             Row(
                               children: [
                                 RatingBarIndicator(
-                                  itemBuilder: (context, index) => Icon(
+                                  itemBuilder: (context, index) => const Icon(
                                     Icons.star,
                                     color: kMikadoYellow,
                                   ),
@@ -188,26 +200,26 @@ class DetailSeasonContent extends StatelessWidget {
                                 Text('${tv.voteAverage}'),
                               ],
                             ),
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                             Text(
                               'Overview',
                               style: kHeading6,
                             ),
                             Text(season.overview == '' ? '-' : season.overview),
-                            SizedBox(height: 4),
-                            Divider(
+                            const SizedBox(height: 4),
+                            const Divider(
                               color: Colors.white24,
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Text(
                               '${season.episodes.length} Episodes',
                               style: kHeading6,
                             ),
-                            SizedBox(height: 8),
-                            season.episodes.length == 0
-                                ? Text('-')
-                                : Container(
-                                    key: Key('season-tv-test'),
+                            const SizedBox(height: 8),
+                            season.episodes.isEmpty
+                                ? const Text('-')
+                                : SizedBox(
+                                    key: const Key('season-tv-test'),
                                     height: 150,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
@@ -226,7 +238,7 @@ class DetailSeasonContent extends StatelessWidget {
                                                 children: [
                                                   ClipRRect(
                                                     borderRadius:
-                                                        BorderRadius.all(
+                                                        const BorderRadius.all(
                                                       Radius.circular(18.0),
                                                     ),
                                                     child: eps.stillPath == null
@@ -235,7 +247,7 @@ class DetailSeasonContent extends StatelessWidget {
                                                             width: 100,
                                                             fit: BoxFit.cover,
                                                           )
-                                                        : Container(
+                                                        : SizedBox(
                                                             width:
                                                                 double.infinity,
                                                             child:
@@ -244,24 +256,24 @@ class DetailSeasonContent extends StatelessWidget {
                                                                   'https://image.tmdb.org/t/p/w500${eps.stillPath}',
                                                               fit: BoxFit
                                                                   .fitWidth,
-                                                              placeholder:
-                                                                  (context,
-                                                                          url) =>
-                                                                      Center(
+                                                              placeholder: (context,
+                                                                      url) =>
+                                                                  const Center(
                                                                 child:
                                                                     CircularProgressIndicator(),
                                                               ),
                                                               errorWidget: (context,
                                                                       url,
                                                                       error) =>
-                                                                  Icon(Icons
+                                                                  const Icon(Icons
                                                                       .error),
                                                             ),
                                                           ),
                                                   ),
                                                   Container(
                                                     width: double.infinity,
-                                                    decoration: BoxDecoration(
+                                                    decoration:
+                                                        const BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.only(
                                                               bottomLeft: Radius
@@ -311,15 +323,15 @@ class DetailSeasonContent extends StatelessWidget {
                                       },
                                     ),
                                   ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Text(
                               '${tv.seasons.length} Seasons',
                               style: kHeading6,
                             ),
-                            SizedBox(height: 8),
-                            tv.seasons.length == 0
-                                ? Text('-')
-                                : Container(
+                            const SizedBox(height: 8),
+                            tv.seasons.isEmpty
+                                ? const Text('-')
+                                : SizedBox(
                                     height: 150,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
@@ -341,7 +353,8 @@ class DetailSeasonContent extends StatelessWidget {
                                               },
                                             ),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
+                                              borderRadius:
+                                                  const BorderRadius.all(
                                                 Radius.circular(8.0),
                                               ),
                                               child: tvs.posterPath == null
@@ -355,13 +368,14 @@ class DetailSeasonContent extends StatelessWidget {
                                                           'https://image.tmdb.org/t/p/w500${tvs.posterPath}',
                                                       placeholder:
                                                           (context, url) =>
-                                                              Center(
+                                                              const Center(
                                                         child:
                                                             CircularProgressIndicator(),
                                                       ),
                                                       errorWidget: (context,
                                                               url, error) =>
-                                                          Icon(Icons.error),
+                                                          const Icon(
+                                                              Icons.error),
                                                     ),
                                             ),
                                           ),
@@ -369,27 +383,26 @@ class DetailSeasonContent extends StatelessWidget {
                                       },
                                     ),
                                   ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Text(
                               'Recommendations',
                               style: kHeading6,
                             ),
-                            SizedBox(height: 8),
-                            Consumer<TvSeasonDetailNotifier>(
-                              builder: (context, data, child) {
-                                final state = data.recommendationState;
-                                if (state == RequestState.Loading) {
-                                  return Center(
+                            const SizedBox(height: 8),
+                            BlocBuilder<TvRecommendationBloc, TvState>(
+                              builder: (context, state) {
+                                if (state is TvLoading) {
+                                  return const Center(
                                     child: CircularProgressIndicator(),
                                   );
-                                } else if (state == RequestState.Error) {
+                                } else if (state is TvError) {
                                   return Text(
-                                    data.message,
-                                    key: Key('error_message'),
+                                    state.message,
+                                    key: const Key('error_message'),
                                   );
-                                } else if (state == RequestState.Loaded) {
-                                  return Container(
-                                    key: Key('recommendation-tv-test'),
+                                } else if (state is TvSuccess) {
+                                  return SizedBox(
+                                    key: const Key('recommendation-tv-test'),
                                     height: 150,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
@@ -406,20 +419,21 @@ class DetailSeasonContent extends StatelessWidget {
                                               arguments: tv.id,
                                             ),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
+                                              borderRadius:
+                                                  const BorderRadius.all(
                                                 Radius.circular(8.0),
                                               ),
                                               child: CachedNetworkImage(
                                                 imageUrl:
                                                     'https://image.tmdb.org/t/p/w500${tv.posterPath}',
                                                 placeholder: (context, url) =>
-                                                    Center(
+                                                    const Center(
                                                   child:
                                                       CircularProgressIndicator(),
                                                 ),
                                                 errorWidget:
                                                     (context, url, error) =>
-                                                        Icon(Icons.error),
+                                                        const Icon(Icons.error),
                                               ),
                                             ),
                                           ),
@@ -456,7 +470,7 @@ class DetailSeasonContent extends StatelessWidget {
             backgroundColor: kRichBlack,
             foregroundColor: Colors.white,
             child: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -468,7 +482,7 @@ class DetailSeasonContent extends StatelessWidget {
   String _showGenres(List<Genre> genres) {
     String result = '';
     for (var genre in genres) {
-      result += genre.name + ', ';
+      result += '${genre.name}, ';
     }
 
     if (result.isEmpty) {

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ditonton/common/exception.dart';
-import 'package:ditonton/data/datasources/tv/tv_remote_data_source.dart';
-import 'package:ditonton/data/models/tv/season/season_detail.dart';
+import '../../../core/lib/data/datasources/tv/tv_remote_data_source.dart';
+import '../../../core/lib/data/models/tv/season/season_detail.dart';
 import 'package:ditonton/data/models/tv/tv_detail_model.dart';
 import 'package:ditonton/data/models/tv/tv_response.dart';
 import 'package:flutter_test/flutter_test.dart';
