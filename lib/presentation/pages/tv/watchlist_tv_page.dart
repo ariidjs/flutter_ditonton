@@ -56,7 +56,6 @@ class _WatchlistTVPageState extends State<WatchlistTvPage> with RouteAware {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/search_not_found.png'),
                       SizedBox(height: 15),
                       Text(
                         'Watchlist not found',
