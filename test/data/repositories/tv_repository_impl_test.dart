@@ -1,23 +1,15 @@
 import 'dart:io';
-
+import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:ditonton/common/exception.dart';
-import 'package:ditonton/common/failure.dart';
-import 'package:ditonton/data/models/movies/genre_model.dart';
-import 'package:ditonton/data/models/tv/last_episode_to_air_model.dart';
-import '../../../core/lib/data/models/tv/network_model.dart';
-import '../../../core/lib/data/models/tv/season/season_detail.dart';
-import 'package:ditonton/data/models/tv/season_model.dart';
-import 'package:ditonton/data/models/tv/spoken_language_model.dart';
-import '../../../core/lib/data/models/tv/tv_detail_model.dart';
-import 'package:ditonton/data/models/tv/tv_model.dart';
-import '../../../core/lib/data/repositories/tv_repository_impl.dart';
-import 'package:ditonton/domain/entities/tv/tv_show.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
-import '../../dummy_data/tv/tv_dummy_object.dart';
+import 'package:core/common/failure.dart';
+import 'package:core/common/exception.dart';
+import 'package:flutter_test/flutter_test.dart';
 import '../../helpers/tv_test_helper.mocks.dart';
+import '../../dummy_data/tv/tv_dummy_object.dart';
+import 'package:core/data/models/tv/tv_models.dart';
+import 'package:tvshow/domain/entities/tv_show.dart';
+import 'package:core/data/models/tv/season/season_detail.dart';
 
 void main() {
   late TvRepositoryImpl repository;
@@ -195,7 +187,7 @@ void main() {
       createdBy: [],
       episodeRunTime: [2],
       firstAirDate: null,
-      genres: [GenreModel(id: 1, name: 'name')],
+      genres: [GenreTvModel(id: 1, name: 'name')],
       homepage: 'homepage',
       id: 1,
       inProduction: false,

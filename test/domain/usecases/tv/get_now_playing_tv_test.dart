@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:ditonton/domain/entities/tv/tv_show.dart';
-import '../../../../core/lib/domain/usecases/tv/get_on_the_air_tv_shows.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:tvshow/tvshow.dart';
 import 'package:mockito/mockito.dart';
-
+import 'package:flutter_test/flutter_test.dart';
 import '../../../helpers/tv_test_helper.mocks.dart';
+import 'package:tvshow/domain/entities/tv_show.dart';
+
+
 
 void main() {
   late GetOnTheAirTvShows usecase;

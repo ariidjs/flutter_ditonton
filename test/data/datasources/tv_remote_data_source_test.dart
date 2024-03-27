@@ -1,17 +1,17 @@
-import 'dart:convert';
 import 'dart:io';
-
-import 'package:ditonton/common/exception.dart';
-import '../../../core/lib/data/datasources/tv/tv_remote_data_source.dart';
-import '../../../core/lib/data/models/tv/season/season_detail.dart';
-import 'package:ditonton/data/models/tv/tv_detail_model.dart';
-import 'package:ditonton/data/models/tv/tv_response.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
-import 'package:mockito/mockito.dart';
-
-import '../../helpers/tv_test_helper.mocks.dart';
+import 'dart:convert';
 import '../../json_reader.dart';
+import 'package:mockito/mockito.dart';
+import 'package:http/http.dart' as http;
+import 'package:core/common/exception.dart';
+import 'package:flutter_test/flutter_test.dart';
+import '../../helpers/tv_test_helper.mocks.dart';
+import 'package:core/data/models/tv/tv_models.dart';
+import '../../../core/lib/data/models/tv/season/season_detail.dart';
+import '../../../core/lib/data/datasources/tv/tv_remote_data_source.dart';
+
+
+
 
 void main() {
   const API_KEY = 'api_key=2174d146bb9c0eab47529b2e77d6b526';

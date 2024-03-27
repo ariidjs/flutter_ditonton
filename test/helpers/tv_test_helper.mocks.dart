@@ -7,25 +7,24 @@ import 'dart:async' as _i8;
 import 'dart:convert' as _i20;
 import 'dart:typed_data' as _i21;
 
+import 'package:core/common/failure.dart' as _i9;
+import 'package:core/data/datasources/db/database_helper.dart' as _i18;
+import 'package:core/data/datasources/tv/tv_local_data_source.dart' as _i15;
+import 'package:core/data/datasources/tv/tv_remote_data_source.dart' as _i13;
+import 'package:core/data/models/movies/movie_table.dart' as _i19;
+import 'package:core/data/models/tv/season/season_detail.dart' as _i4;
+import 'package:core/data/models/tv/tv_detail_model.dart' as _i3;
+import 'package:core/data/models/tv/tv_model.dart' as _i14;
+import 'package:core/data/models/tv/tv_table.dart' as _i16;
 import 'package:dartz/dartz.dart' as _i2;
-import 'package:ditonton/common/failure.dart' as _i9;
-import '../../core/lib/data/datasources/db/database_helper.dart' as _i18;
-import '../../core/lib/data/datasources/tv/tv_local_data_source.dart' as _i15;
-import '../../core/lib/data/datasources/tv/tv_remote_data_source.dart'
-    as _i13;
-import '../../core/lib/data/models/movies/movie_table.dart' as _i19;
-import '../../core/lib/data/models/tv/season/season_detail.dart' as _i4;
-import '../../core/lib/data/models/tv/tv_detail_model.dart' as _i3;
-import '../../core/lib/data/models/tv/tv_model.dart' as _i14;
-import '../../core/lib/data/models/tv/tv_table.dart' as _i16;
-import 'package:ditonton/domain/entities/tv/season_detail.dart' as _i12;
-import '../../core/lib/domain/entities/tv/tv_detail.dart' as _i11;
-import 'package:ditonton/domain/entities/tv/tv_show.dart' as _i10;
-import '../../core/lib/domain/repositories/tv_repository.dart' as _i7;
 import 'package:http/http.dart' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i17;
 import 'package:sqflite/sqflite.dart' as _i5;
+import 'package:tvshow/domain/entities/season_detail.dart' as _i12;
+import 'package:tvshow/domain/entities/tv_detail.dart' as _i11;
+import 'package:tvshow/domain/entities/tv_show.dart' as _i10;
+import 'package:tvshow/domain/repositories/tv_repository.dart' as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

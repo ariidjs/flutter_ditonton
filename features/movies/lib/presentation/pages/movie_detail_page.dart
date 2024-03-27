@@ -150,12 +150,12 @@ class DetailContent extends StatelessWidget {
                                       SnackBar(content: Text(message)));
                                   BlocProvider.of<MovieWatchlistBloc>(context)
                                       .add(WatchlistStatusMovie(movie.id));
-                                } else {
+                                } else if (state is MovieError) {
                                   showDialog(
                                       context: context,
                                       builder: (context) {
                                         return AlertDialog(
-                                          content: Text(message),
+                                          content: Text(state.message),
                                         );
                                       });
                                 }

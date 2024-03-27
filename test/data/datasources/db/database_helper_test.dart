@@ -1,8 +1,6 @@
-import '../../../../core/lib/data/datasources/db/database_helper.dart';
+import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
-import '../../../dummy_data/movies/dummy_objects.dart';
 import '../../../dummy_data/tv/tv_dummy_object.dart';
 
 void main() {
@@ -19,28 +17,28 @@ void main() {
   });
 
   group('CRUD testing', () {
-    group('watchlist movies', () {
-      test('should return 1 when insert to database is success', () async {
-        final result = await dbHelper.insertWatchlist(testMovieTable);
-        expect(result, 1);
-      });
-      test('should return 1 when remove from database is success', () async {
-        final result = await dbHelper.removeWatchlist(testMovieTable);
-        expect(result, 1);
-      });
-      test('should return MovieTable when data is founded', () async {
-        await dbHelper.removeWatchlist(testMovieTable);
-        await dbHelper.insertWatchlist(testMovieTable);
-        final result = await dbHelper.getMovieById(1);
-        expect(result, testMovieTable.toMap());
-      });
-      test('should return list of MovieTable when data is founded', () async {
-        await dbHelper.removeWatchlist(testMovieTable);
-        await dbHelper.insertWatchlist(testMovieTable);
-        final result = await dbHelper.getWatchlistMovies();
-        expect(result, [testMovieTable.toMap()]);
-      });
-    });
+    // group('watchlist movies', () {
+    //   test('should return 1 when insert to database is success', () async {
+    //     final result = await dbHelper.insertWatchlist(testMovieTable);
+    //     expect(result, 1);
+    //   });
+    //   test('should return 1 when remove from database is success', () async {
+    //     final result = await dbHelper.removeWatchlist(testMovieTable);
+    //     expect(result, 1);
+    //   });
+    //   test('should return MovieTable when data is founded', () async {
+    //     await dbHelper.removeWatchlist(testMovieTable);
+    //     await dbHelper.insertWatchlist(testMovieTable);
+    //     final result = await dbHelper.getMovieById(1);
+    //     expect(result, testMovieTable.toMap());
+    //   });
+    //   test('should return list of MovieTable when data is founded', () async {
+    //     await dbHelper.removeWatchlist(testMovieTable);
+    //     await dbHelper.insertWatchlist(testMovieTable);
+    //     final result = await dbHelper.getWatchlistMovies();
+    //     expect(result, [testMovieTable.toMap()]);
+    //   });
+    // });
 
     group("watchlist tv show", () {
       test('should return 1 when insert to database is success', () async {

@@ -1,10 +1,12 @@
-import 'package:ditonton/data/models/tv/tv_table.dart';
-import 'package:ditonton/domain/entities/movies/genre.dart';
-import 'package:ditonton/domain/entities/tv/episode.dart';
-import 'package:ditonton/domain/entities/tv/season.dart';
-import 'package:ditonton/domain/entities/tv/season_detail.dart';
-import '../../../core/lib/domain/entities/tv/tv_detail.dart';
-import 'package:ditonton/domain/entities/tv/tv_show.dart';
+import 'package:tvshow/domain/entities/genre.dart';
+import 'package:core/data/models/tv/tv_models.dart';
+import 'package:tvshow/domain/entities/season.dart';
+import 'package:tvshow/domain/entities/episode.dart';
+import 'package:tvshow/domain/entities/tv_show.dart';
+import 'package:tvshow/domain/entities/tv_detail.dart';
+import 'package:tvshow/domain/entities/season_detail.dart';
+
+
 
 final testTv = TvShow(
   backdropPath: '/5DUMPBSnHOZsbBv81GFXZXvDpo6.jpg',

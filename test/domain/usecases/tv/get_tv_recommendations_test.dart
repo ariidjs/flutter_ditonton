@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:ditonton/domain/entities/tv/tv_show.dart';
-import 'package:ditonton/domain/usecases/tv/get_tv_show_recommendations.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:tvshow/tvshow.dart';
 import 'package:mockito/mockito.dart';
-
+import 'package:flutter_test/flutter_test.dart';
 import '../../../helpers/tv_test_helper.mocks.dart';
+import 'package:tvshow/domain/entities/tv_show.dart';
+
 
 void main() {
   late GetTvShowRecommendations usecase;

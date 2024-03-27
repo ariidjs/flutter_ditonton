@@ -1,9 +1,7 @@
-import '../../core/lib/data/datasources/db/database_helper.dart';
-import '../../core/lib/data/datasources/tv/tv_local_data_source.dart';
-import '../../core/lib/data/datasources/tv/tv_remote_data_source.dart';
-import 'package:ditonton/domain/repositories/tv_repository.dart';
-import 'package:mockito/annotations.dart';
+import 'package:core/core.dart';
+import 'package:tvshow/tvshow.dart';
 import 'package:http/http.dart' as http;
+import 'package:mockito/annotations.dart';
 
 @GenerateMocks([
   TvRepository,

@@ -1,10 +1,9 @@
 import 'dart:convert';
-
-import 'package:ditonton/data/models/tv/tv_model.dart';
-import 'package:ditonton/data/models/tv/tv_response.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import '../../../json_reader.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:core/data/models/tv/tv_models.dart';
+
+
 
 void main() {
   final tTvModel = TvModel(
