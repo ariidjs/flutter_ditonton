@@ -10,8 +10,6 @@ import 'package:tvshow/domain/entities/season_detail.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-
-
 class TvSeasonDetailPage extends StatefulWidget {
   static const ROUTE_NAME = '/season_detail_tv';
   final TvDetail tv;
@@ -167,11 +165,11 @@ class DetailSeasonContent extends StatelessWidget {
                                     state is TvWatchlistStatus) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text(message)));
-                                } else {
+                                } else if (state is TvError) {
                                   showDialog(
                                     context: context,
-                                    builder: (context) =>
-                                        AlertDialog(content: Text(message)),
+                                    builder: (context) => AlertDialog(
+                                        content: Text(state.message)),
                                   );
                                 }
                               },

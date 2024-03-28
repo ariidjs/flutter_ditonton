@@ -1,7 +1,8 @@
-import 'package:core/core.dart';
 import 'package:movies/domain/entities/genre.dart';
 import 'package:movies/domain/entities/movie.dart';
+import 'package:movies/data/models/movies_data.dart';
 import 'package:movies/domain/entities/movie_detail.dart';
+
 
 
 

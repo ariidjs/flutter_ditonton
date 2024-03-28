@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'tv_season_detail_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:core/common/constants.dart';
-import 'package:core/common/state_enum.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tvshow/domain/entities/genre.dart';
 import 'package:tvshow/domain/entities/tv_show.dart';
@@ -157,11 +155,11 @@ class DetailContentTvShow extends StatelessWidget {
                                       SnackBar(content: Text(message)));
                                   BlocProvider.of<TvWatchlistBloc>(context)
                                       .add(WatchlistStatusTv(tv.id));
-                                } else {
+                                } else if (state is TvError) {
                                   showDialog(
                                     context: context,
-                                    builder: (context) =>
-                                        AlertDialog(content: Text(message)),
+                                    builder: (context) => AlertDialog(
+                                        content: Text(state.message)),
                                   );
                                 }
                               },

@@ -1,8 +1,7 @@
 import 'dart:async';
-
-import '../../models/movies/movie_table.dart';
-import '../../models/tv/tv_table.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:tvshow/data/models/tv_models.dart';
+import 'package:movies/data/models/movies_data.dart';
 
 class DatabaseHelper {
   Database? database;
@@ -41,28 +40,17 @@ class DatabaseHelper {
 
   Future<int> insertWatchlist(MovieTable movie) async {
     final db = database;
-    return await db!.insert(
-      _tblWatchlist,
-      {
-        'id': movie.id,
-        'title': movie.title,
-        'posterPath': movie.posterPath,
-        'overview': movie.overview,
-      },
-    );
+    return await db!.insert(_tblWatchlist, movie.toMap());
   }
 
   Future<int> insertTvWatchlist(TvTable tv) async {
     final db = database;
-    return await db!.insert(
-      _tblWatchlistTv,
-      {
-        'id': tv.id,
-        'name': tv.name,
-        'posterPath': tv.posterPath,
-        'overview': tv.overview,
-      },
-    );
+    return await db!.insert(_tblWatchlistTv, {
+      'id': tv.id,
+      'name': tv.name,
+      'posterPath': tv.posterPath,
+      'overview': tv.overview,
+    });
   }
 
   Future<int> removeWatchlist(MovieTable movie) async {

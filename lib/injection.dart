@@ -4,6 +4,12 @@ import 'package:movies/movies.dart';
 import 'package:tvshow/tvshow.dart';
 import 'package:http/http.dart' as http;
 import 'package:tvshow/presentation/bloc/tv_bloc.dart';
+import 'package:tvshow/data/repositories/tv_repository_impl.dart';
+import 'package:tvshow/data/datasources/tv_local_data_source.dart';
+import 'package:tvshow/data/datasources/tv_remote_data_source.dart';
+import 'package:movies/data/repositories/movie_repository_impl.dart';
+import 'package:movies/data/datasources/movie_local_data_source.dart';
+import 'package:movies/data/datasources/movie_remote_data_source.dart';
 
 final locator = GetIt.instance;
 

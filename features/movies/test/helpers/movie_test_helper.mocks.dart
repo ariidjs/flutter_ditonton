@@ -4,27 +4,23 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
-import 'dart:convert' as _i18;
-import 'dart:typed_data' as _i19;
+import 'dart:convert' as _i16;
+import 'dart:typed_data' as _i17;
 
 import 'package:core/common/failure.dart' as _i8;
-import 'package:core/data/datasources/db/database_helper.dart' as _i16;
-import 'package:core/data/datasources/movies/movie_local_data_source.dart'
-    as _i13;
-import 'package:core/data/datasources/movies/movie_remote_data_source.dart'
-    as _i11;
-import 'package:core/data/models/movies/movie_detail_model.dart' as _i3;
-import 'package:core/data/models/movies/movie_model.dart' as _i12;
-import 'package:core/data/models/movies/movie_table.dart' as _i14;
-import 'package:core/data/models/tv/tv_table.dart' as _i17;
+import 'package:core/data/datasources/db/database_helper.dart' as _i14;
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:http/http.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i15;
+import 'package:mockito/src/dummies.dart' as _i13;
+import 'package:movies/data/datasources/movie_local_data_source.dart' as _i12;
+import 'package:movies/data/datasources/movie_remote_data_source.dart' as _i11;
+import 'package:movies/data/models/movies_data.dart' as _i3;
 import 'package:movies/domain/entities/movie.dart' as _i9;
 import 'package:movies/domain/entities/movie_detail.dart' as _i10;
 import 'package:movies/domain/repositories/movie_repository.dart' as _i6;
 import 'package:sqflite/sqflite.dart' as _i4;
+import 'package:tvshow/data/models/tv_models.dart' as _i15;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -278,35 +274,31 @@ class MockMovieRemoteDataSource extends _i1.Mock
   }
 
   @override
-  _i7.Future<List<_i12.MovieModel>> getNowPlayingMovies() =>
-      (super.noSuchMethod(
+  _i7.Future<List<_i3.MovieModel>> getNowPlayingMovies() => (super.noSuchMethod(
         Invocation.method(
           #getNowPlayingMovies,
           [],
         ),
-        returnValue:
-            _i7.Future<List<_i12.MovieModel>>.value(<_i12.MovieModel>[]),
-      ) as _i7.Future<List<_i12.MovieModel>>);
+        returnValue: _i7.Future<List<_i3.MovieModel>>.value(<_i3.MovieModel>[]),
+      ) as _i7.Future<List<_i3.MovieModel>>);
 
   @override
-  _i7.Future<List<_i12.MovieModel>> getPopularMovies() => (super.noSuchMethod(
+  _i7.Future<List<_i3.MovieModel>> getPopularMovies() => (super.noSuchMethod(
         Invocation.method(
           #getPopularMovies,
           [],
         ),
-        returnValue:
-            _i7.Future<List<_i12.MovieModel>>.value(<_i12.MovieModel>[]),
-      ) as _i7.Future<List<_i12.MovieModel>>);
+        returnValue: _i7.Future<List<_i3.MovieModel>>.value(<_i3.MovieModel>[]),
+      ) as _i7.Future<List<_i3.MovieModel>>);
 
   @override
-  _i7.Future<List<_i12.MovieModel>> getTopRatedMovies() => (super.noSuchMethod(
+  _i7.Future<List<_i3.MovieModel>> getTopRatedMovies() => (super.noSuchMethod(
         Invocation.method(
           #getTopRatedMovies,
           [],
         ),
-        returnValue:
-            _i7.Future<List<_i12.MovieModel>>.value(<_i12.MovieModel>[]),
-      ) as _i7.Future<List<_i12.MovieModel>>);
+        returnValue: _i7.Future<List<_i3.MovieModel>>.value(<_i3.MovieModel>[]),
+      ) as _i7.Future<List<_i3.MovieModel>>);
 
   @override
   _i7.Future<_i3.MovieDetailResponse> getMovieDetail(int? id) =>
@@ -326,45 +318,43 @@ class MockMovieRemoteDataSource extends _i1.Mock
       ) as _i7.Future<_i3.MovieDetailResponse>);
 
   @override
-  _i7.Future<List<_i12.MovieModel>> getMovieRecommendations(int? id) =>
+  _i7.Future<List<_i3.MovieModel>> getMovieRecommendations(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getMovieRecommendations,
           [id],
         ),
-        returnValue:
-            _i7.Future<List<_i12.MovieModel>>.value(<_i12.MovieModel>[]),
-      ) as _i7.Future<List<_i12.MovieModel>>);
+        returnValue: _i7.Future<List<_i3.MovieModel>>.value(<_i3.MovieModel>[]),
+      ) as _i7.Future<List<_i3.MovieModel>>);
 
   @override
-  _i7.Future<List<_i12.MovieModel>> searchMovies(String? query) =>
+  _i7.Future<List<_i3.MovieModel>> searchMovies(String? query) =>
       (super.noSuchMethod(
         Invocation.method(
           #searchMovies,
           [query],
         ),
-        returnValue:
-            _i7.Future<List<_i12.MovieModel>>.value(<_i12.MovieModel>[]),
-      ) as _i7.Future<List<_i12.MovieModel>>);
+        returnValue: _i7.Future<List<_i3.MovieModel>>.value(<_i3.MovieModel>[]),
+      ) as _i7.Future<List<_i3.MovieModel>>);
 }
 
 /// A class which mocks [MovieLocalDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockMovieLocalDataSource extends _i1.Mock
-    implements _i13.MovieLocalDataSource {
+    implements _i12.MovieLocalDataSource {
   MockMovieLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<String> insertWatchlist(_i14.MovieTable? movie) =>
+  _i7.Future<String> insertWatchlist(_i3.MovieTable? movie) =>
       (super.noSuchMethod(
         Invocation.method(
           #insertWatchlist,
           [movie],
         ),
-        returnValue: _i7.Future<String>.value(_i15.dummyValue<String>(
+        returnValue: _i7.Future<String>.value(_i13.dummyValue<String>(
           this,
           Invocation.method(
             #insertWatchlist,
@@ -374,13 +364,13 @@ class MockMovieLocalDataSource extends _i1.Mock
       ) as _i7.Future<String>);
 
   @override
-  _i7.Future<String> removeWatchlist(_i14.MovieTable? movie) =>
+  _i7.Future<String> removeWatchlist(_i3.MovieTable? movie) =>
       (super.noSuchMethod(
         Invocation.method(
           #removeWatchlist,
           [movie],
         ),
-        returnValue: _i7.Future<String>.value(_i15.dummyValue<String>(
+        returnValue: _i7.Future<String>.value(_i13.dummyValue<String>(
           this,
           Invocation.method(
             #removeWatchlist,
@@ -390,29 +380,28 @@ class MockMovieLocalDataSource extends _i1.Mock
       ) as _i7.Future<String>);
 
   @override
-  _i7.Future<_i14.MovieTable?> getMovieById(int? id) => (super.noSuchMethod(
+  _i7.Future<_i3.MovieTable?> getMovieById(int? id) => (super.noSuchMethod(
         Invocation.method(
           #getMovieById,
           [id],
         ),
-        returnValue: _i7.Future<_i14.MovieTable?>.value(),
-      ) as _i7.Future<_i14.MovieTable?>);
+        returnValue: _i7.Future<_i3.MovieTable?>.value(),
+      ) as _i7.Future<_i3.MovieTable?>);
 
   @override
-  _i7.Future<List<_i14.MovieTable>> getWatchlistMovies() => (super.noSuchMethod(
+  _i7.Future<List<_i3.MovieTable>> getWatchlistMovies() => (super.noSuchMethod(
         Invocation.method(
           #getWatchlistMovies,
           [],
         ),
-        returnValue:
-            _i7.Future<List<_i14.MovieTable>>.value(<_i14.MovieTable>[]),
-      ) as _i7.Future<List<_i14.MovieTable>>);
+        returnValue: _i7.Future<List<_i3.MovieTable>>.value(<_i3.MovieTable>[]),
+      ) as _i7.Future<List<_i3.MovieTable>>);
 }
 
 /// A class which mocks [DatabaseHelper].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDatabaseHelper extends _i1.Mock implements _i16.DatabaseHelper {
+class MockDatabaseHelper extends _i1.Mock implements _i14.DatabaseHelper {
   MockDatabaseHelper() {
     _i1.throwOnMissingStub(this);
   }
@@ -458,8 +447,7 @@ class MockDatabaseHelper extends _i1.Mock implements _i16.DatabaseHelper {
       );
 
   @override
-  _i7.Future<int> insertWatchlist(_i14.MovieTable? movie) =>
-      (super.noSuchMethod(
+  _i7.Future<int> insertWatchlist(_i3.MovieTable? movie) => (super.noSuchMethod(
         Invocation.method(
           #insertWatchlist,
           [movie],
@@ -468,7 +456,7 @@ class MockDatabaseHelper extends _i1.Mock implements _i16.DatabaseHelper {
       ) as _i7.Future<int>);
 
   @override
-  _i7.Future<int> insertTvWatchlist(_i17.TvTable? tv) => (super.noSuchMethod(
+  _i7.Future<int> insertTvWatchlist(_i15.TvTable? tv) => (super.noSuchMethod(
         Invocation.method(
           #insertTvWatchlist,
           [tv],
@@ -477,8 +465,7 @@ class MockDatabaseHelper extends _i1.Mock implements _i16.DatabaseHelper {
       ) as _i7.Future<int>);
 
   @override
-  _i7.Future<int> removeWatchlist(_i14.MovieTable? movie) =>
-      (super.noSuchMethod(
+  _i7.Future<int> removeWatchlist(_i3.MovieTable? movie) => (super.noSuchMethod(
         Invocation.method(
           #removeWatchlist,
           [movie],
@@ -487,7 +474,7 @@ class MockDatabaseHelper extends _i1.Mock implements _i16.DatabaseHelper {
       ) as _i7.Future<int>);
 
   @override
-  _i7.Future<int> removeTvWatchlist(_i17.TvTable? tv) => (super.noSuchMethod(
+  _i7.Future<int> removeTvWatchlist(_i15.TvTable? tv) => (super.noSuchMethod(
         Invocation.method(
           #removeTvWatchlist,
           [tv],
@@ -592,7 +579,7 @@ class MockHttpClient extends _i1.Mock implements _i5.Client {
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i18.Encoding? encoding,
+    _i16.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -623,7 +610,7 @@ class MockHttpClient extends _i1.Mock implements _i5.Client {
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i18.Encoding? encoding,
+    _i16.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -654,7 +641,7 @@ class MockHttpClient extends _i1.Mock implements _i5.Client {
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i18.Encoding? encoding,
+    _i16.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -685,7 +672,7 @@ class MockHttpClient extends _i1.Mock implements _i5.Client {
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i18.Encoding? encoding,
+    _i16.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -722,7 +709,7 @@ class MockHttpClient extends _i1.Mock implements _i5.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i7.Future<String>.value(_i15.dummyValue<String>(
+        returnValue: _i7.Future<String>.value(_i13.dummyValue<String>(
           this,
           Invocation.method(
             #read,
@@ -733,7 +720,7 @@ class MockHttpClient extends _i1.Mock implements _i5.Client {
       ) as _i7.Future<String>);
 
   @override
-  _i7.Future<_i19.Uint8List> readBytes(
+  _i7.Future<_i17.Uint8List> readBytes(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -743,8 +730,8 @@ class MockHttpClient extends _i1.Mock implements _i5.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i7.Future<_i19.Uint8List>.value(_i19.Uint8List(0)),
-      ) as _i7.Future<_i19.Uint8List>);
+        returnValue: _i7.Future<_i17.Uint8List>.value(_i17.Uint8List(0)),
+      ) as _i7.Future<_i17.Uint8List>);
 
   @override
   _i7.Future<_i5.StreamedResponse> send(_i5.BaseRequest? request) =>

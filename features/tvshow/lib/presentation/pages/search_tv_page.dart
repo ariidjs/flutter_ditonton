@@ -31,6 +31,7 @@ class SearchTvPage extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
               textInputAction: TextInputAction.search,
+              key: Key('textfield-test'),
             ),
             const SizedBox(height: 16),
             Text(

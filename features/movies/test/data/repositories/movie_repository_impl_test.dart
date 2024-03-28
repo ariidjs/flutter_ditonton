@@ -1,13 +1,14 @@
 import 'dart:io';
-import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mockito/mockito.dart';
 import 'package:core/common/failure.dart';
 import 'package:core/common/exception.dart';
+import '../../dummy_data/dummy_objects.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:movies/domain/entities/movie.dart';
-import '../../dummy_data/dummy_objects.dart';
 import '../../helpers/movie_test_helper.mocks.dart';
+import 'package:movies/data/models/movies_data.dart';
+import 'package:movies/data/repositories/movie_repository_impl.dart';
 
 void main() {
   late MovieRepositoryImpl repository;

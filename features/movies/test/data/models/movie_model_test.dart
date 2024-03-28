@@ -1,6 +1,7 @@
-import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:movies/domain/entities/movie.dart';
+import 'package:movies/data/models/movie_model.dart';
+
 
 void main() {
   final tMovieModel = MovieModel(
