@@ -31,21 +31,27 @@ void main() {
     );
   }
 
-  testWidgets('Page should display center progress bar when loading',
-      (WidgetTester tester) async {
+  testWidgets('textfield test', (WidgetTester tester) async {
+    String query = 'test-search';
+    when(() => mockSearchTvBloc.state).thenReturn(TvEmpty());
     await tester.pumpWidget(_makeTestableWidget(SearchTvPage()));
 
-    await tester.pump(Duration(milliseconds: 400));
-    await tester.enterText(find.byKey(Key('textfield-test')), 'Test search');
+    await tester.enterText(find.byKey(Key('textfield-test')), query);
     await tester.testTextInput.receiveAction(TextInputAction.search);
     await tester.pump();
-    // when(() => mockSearchTvBloc.state).thenReturn(TvLoading());
 
-    // final progressBarFinder = find.byType(CircularProgressIndicator);
-    // final centerFinder = find.byType(Center);
+    expect(find.text(query), findsOneWidget);
+  });
 
-    // expect(centerFinder, findsOneWidget);
-    // expect(progressBarFinder, findsOneWidget);
+  testWidgets('Page should display center progress bar when loading',
+      (WidgetTester tester) async {
+    when(() => mockSearchTvBloc.state).thenReturn(TvLoading());
+
+    await tester.pumpWidget(_makeTestableWidget(SearchTvPage()));
+
+    final progressBarFinder = find.byType(CircularProgressIndicator);
+
+    expect(progressBarFinder, findsOneWidget);
   });
 
   testWidgets('Page should display ListView when data is loaded',
@@ -58,6 +64,17 @@ void main() {
 
     expect(listViewFinder, findsOneWidget);
     expect(find.byType(TvCard), findsOneWidget);
+  });
+
+  testWidgets('Page should display Text when data is empty',
+      (WidgetTester tester) async {
+    when(() => mockSearchTvBloc.state).thenReturn(TvSuccess([]));
+
+    final textViewFinder = find.byKey(Key('search-test'));
+
+    await tester.pumpWidget(_makeTestableWidget(SearchTvPage()));
+
+    expect(textViewFinder, findsOneWidget);
   });
 
   testWidgets('Page should display text with message when Error',

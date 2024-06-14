@@ -53,6 +53,7 @@ class SearchTvPage extends StatelessWidget {
                           children: [
                             const SizedBox(height: 15),
                             Text(
+                              key: Key('search-test'),
                               'TV Show not found',
                               style: kHeading6.copyWith(
                                 color: Colors.white,
@@ -75,11 +76,15 @@ class SearchTvPage extends StatelessWidget {
                       itemCount: state.tvList.length,
                     ),
                   );
-                } else {
-                  return Expanded(
-                    child: Container(),
+                } else if (state is TvError) {
+                  return Center(
+                    key: const Key('error_message'),
+                    child: Text(state.message),
                   );
                 }
+                return Expanded(
+                  child: Container(),
+                );
               },
             ),
           ],

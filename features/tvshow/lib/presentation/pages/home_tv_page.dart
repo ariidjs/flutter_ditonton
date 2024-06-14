@@ -5,9 +5,7 @@ import 'top_rated_tv_page.dart';
 import 'on_the_air_tv_page.dart';
 import 'package:movies/movies.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:core/common/constants.dart';
-import 'package:core/common/state_enum.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tvshow/domain/entities/tv_show.dart';
 import 'package:tvshow/presentation/bloc/tv_bloc.dart';
@@ -165,7 +163,7 @@ class _HomeTVPageState extends State<HomeTvPage> {
         InkWell(
           onTap: onTap,
           key: key,
-          child: const Padding(
+          child: Padding(
             padding: EdgeInsets.all(8.0),
             child: Row(
               children: [
